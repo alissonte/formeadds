@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd"
+      no-conversation-view-id="/SampleConsumptionList.xhtml"
+      login-required="true">
+
+   <begin-conversation join="true" flush-mode="MANUAL"/>
+
+   <action execute="#{sampleConsumptionHome.wire}"/>
+
+   <param name="sampleConsumptionFrom"/>
+   <param name="sampleConsumptionId" value="#{sampleConsumptionHome.sampleConsumptionId}"/>
+   <param name="algorithmFrom"/>
+   <param name="algorithmId" value="#{algorithmHome.algorithmId}"/>
+   <param name="libraryFrom"/>
+   <param name="libraryId" value="#{libraryHome.libraryId}"/>
+
+   <param name="operationModeFrom"/>
+   <param name="operationModeId" value="#{operationModeHome.operationModeId}"/>
+
+   <param name="algorithmTypeFrom"/>
+   <param name="algorithmTypeId" value="#{algorithmTypeHome.algorithmTypeId}"/>
+
+
+   <param name="deviceFrom"/>
+   <param name="deviceId" value="#{deviceHome.deviceId}"/>
+   <param name="userFrom"/>
+   <param name="userId" value="#{userHome.userId}"/>
+
+
+
+
+   <navigation from-action="#{sampleConsumptionHome.persist}">
+      <rule if-outcome="persisted">
+         <end-conversation/>
+         <redirect view-id="/SampleConsumption.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{sampleConsumptionHome.update}">
+      <rule if-outcome="updated">
+         <end-conversation/>
+         <redirect view-id="/SampleConsumption.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{sampleConsumptionHome.remove}">
+      <rule if-outcome="removed">
+         <end-conversation/>
+         <redirect view-id="/SampleConsumptionList.xhtml"/>
+      </rule>
+   </navigation>
+
+</page>

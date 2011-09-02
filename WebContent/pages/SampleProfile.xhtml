@@ -1,0 +1,93 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Sample profile Details</f:facet>
+
+
+        <s:decorate id="name" template="/layout/display.xhtml">
+            <ui:define name="label">Nome</ui:define>
+            <h:outputText value="#{sampleProfileHome.instance.name}"/>
+        </s:decorate>
+        
+        <s:decorate id="libraryField" template="/layout/display.xhtml">
+            <ui:define name="label">Biblioteca</ui:define>
+            <h:outputText value="#{sampleProfileHome.instance.library.name}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button id="delete"
+                          value="Remover"
+                         action="#{sampleProfileHome.remove}"
+                       rendered="#{sampleProfileHome.managed}"/>
+
+        <s:button view="/#{empty sampleProfileFrom ? '/pages/SampleProfileList' : sampleProfileFrom}.xhtml"
+                    id="done"
+                 value="Concluído"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+   <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Algoritmos do perfil</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="sampleProfilesChildren">
+
+        <h:outputText value="Não existem associações com essa entidade."
+                   rendered="#{empty sampleProfileHome.sampleProfiles}"/>
+
+        <rich:dataTable value="#{sampleProfileHome.sampleProfiles}"
+                       var="_algorithmSampleProfile"
+                  rendered="#{not empty sampleProfileHome.sampleProfiles}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="sampleProfilesTable">
+            <rich:column sortBy="#{_algorithmSampleProfile.averageConsumption}">
+                <f:facet name="header">Consumo médio</f:facet>
+                <h:outputText value="#{_algorithmSampleProfile.averageConsumption}">
+                    <f:convertNumber type="number" minFractionDigits="8" />
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_algorithmSampleProfile.averageDecryptTime}">
+                <f:facet name="header">Tempo Médio de Decifragem</f:facet>
+                <h:outputText value="#{_algorithmSampleProfile.averageDecryptTime}"/>
+            </rich:column>
+            <rich:column sortBy="#{_algorithmSampleProfile.averageEncryptTime}">
+                <f:facet name="header">Tempo Médio de Cifragem</f:facet>
+                <h:outputText value="#{_algorithmSampleProfile.averageEncryptTime}"/>
+            </rich:column>
+            <rich:column sortBy="#{_algorithmSampleProfile.averageMemoryRequired}">
+                <f:facet name="header">Tempo médio requerido</f:facet>
+                <h:outputText value="#{_algorithmSampleProfile.averageMemoryRequired}"/>
+            </rich:column>
+            <rich:column sortBy="#{_algorithmSampleProfile.averageRuntime}">
+                <f:facet name="header">Tempo Médio de Execução</f:facet>
+                <h:outputText value="#{_algorithmSampleProfile.averageRuntime}"/>
+            </rich:column>
+            <rich:column sortBy="#{_algorithmSampleProfile.samplesTextSize}">
+                <f:facet name="header">Tamamnho de Texto das amostras</f:facet>
+                <h:outputText value="#{_algorithmSampleProfile.samplesTextSize}"/>
+            </rich:column>
+        </rich:dataTable>
+
+    </h:form>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,120 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="sampleSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Filtro" switchType="ajax" id="chartPanel">
+
+            <s:decorate template="/layout/edit.xhtml">
+                <ui:define name="label">Tipo</ui:define>
+                <h:selectOneMenu id="chartType" required="true" value="#{sampleList.type}">
+                    <a:support event="onchange" ajaxSingle="true" reRender="chartPanel" />
+                    <s:selectItems value="#{chartTypes}" var="o" label="#{o eq 'MEMORY' ? 'Memória' : (o eq 'CONSUMPTION' ? 'Consumo' : (o eq 'TIME' ? 'Tempo' : 'Desempenho/Tempo'))}" noSelectionLabel="Selecione..." />
+                    <s:convertEnum />
+                </h:selectOneMenu>
+            </s:decorate>
+            
+            <s:decorate template="/layout/edit.xhtml">
+                <ui:define name="label">Fonte de dados</ui:define>
+                <h:selectOneMenu value="#{sampleList.user}" required="true" id="selectedUser">
+                    <a:support event="onchange" ajaxSingle="true" reRender="chartPanel" />
+                    <s:selectItems value="#{sampleList.users}" var="u" label="#{u.login eq 'admin' ? 'Default' : 'Usuário'}" itemValue="#{u.id}" noSelectionLabel="Selecione..." />
+                </h:selectOneMenu>                
+            </s:decorate>
+            
+            <s:decorate template="/layout/edit.xhtml">
+                <ui:define name="label">Biblioteca</ui:define>
+                <h:selectOneMenu id="library" required="true" value="#{sampleList.library}">
+                    <a:support event="onchange" ajaxSingle="true" reRender="chartPanel" />
+                    <s:selectItems value="#{sampleList.libraries}" var="l" label="#{l.name}" itemValue="#{l.id}" noSelectionLabel="Selecione..." />
+                </h:selectOneMenu>
+            </s:decorate>
+            <br clear="all" />
+            <s:decorate template="/layout/edit.xhtml">
+                <ui:define name="label">Dispositivo</ui:define>
+                <h:selectOneMenu id="device" required="true" value="#{sampleList.device}">
+                    <a:support event="onchange" ajaxSingle="true" reRender="chartPanel" />
+                    <s:selectItems value="#{sampleList.devices}" var="d" label="#{d.name}" itemValue="#{d.id}" noSelectionLabel="Selecione..." />
+                </h:selectOneMenu>
+            </s:decorate>
+            
+            <s:decorate template="/layout/edit.xhtml">
+                <ui:define name="label">Tipo de Algoritmo</ui:define>
+                <h:selectOneMenu id="algorithm" required="true" value="#{sampleList.algorithm}">
+                    <a:support event="onchange" ajaxSingle="true" reRender="chartPanel" />
+                    <s:selectItems value="#{sampleList.algorithms}" var="a" label="#{a.name}" itemValue="#{a.id}" noSelectionLabel="Selecione..." />
+                </h:selectOneMenu>
+            </s:decorate>
+            
+            <s:decorate template="/layout/edit.xhtml" rendered="#{not empty sampleList.algorithm and sampleList.algorithm eq 1}">
+                <ui:define name="label">Modo de Operação</ui:define>
+                <h:selectOneMenu id="operation" value="#{sampleList.operation}">
+                    <a:support event="onchange" ajaxSingle="true" reRender="chartPanel" />
+                    <s:selectItems value="#{sampleList.operations}" var="m" label="#{m.name}" itemValue="#{m.id}" noSelectionLabel="Selecione..." />
+                </h:selectOneMenu>
+            </s:decorate>
+            
+            <s:decorate template="/layout/edit.xhtml" rendered="#{(not empty sampleList.user and not empty sampleList.library) and sampleList.type ne 'CONSUMPTION'}">
+                <ui:define name="label">Tamanho do texto</ui:define>
+                <h:selectOneMenu disabled="#{not empty sampleList.type and sampleList.type eq 'PERFORMANCE'}" value="#{sampleList.textSize}" id="textSize">
+                    <a:support event="onchange" ajaxSingle="true" reRender="chartPanel" />
+                    <s:selectItems value="#{sampleList.textSizes}" var="t" label="#{t/1024}" itemValue="#{t}" noSelectionLabel="Selecione..." />
+                </h:selectOneMenu>                
+            </s:decorate>
+            
+            <s:decorate template="/layout/edit.xhtml" rendered="#{sampleList.type eq 'PERFORMANCE'}">
+                <ui:define name="label">Inter. de adaptação</ui:define>
+                <h:selectOneMenu value="#{sampleList.slice}" id="slice">
+                    <a:support event="onchange" ajaxSingle="true" reRender="chartPanel" />
+                    <f:selectItem itemValue="1" itemLabel="1%" />
+                    <f:selectItem itemValue="2" itemLabel="2%" />
+                    <f:selectItem itemValue="3" itemLabel="3%" />
+                    <f:selectItem itemValue="4" itemLabel="4%" />
+                    <f:selectItem itemValue="5" itemLabel="5%" />
+                    <f:selectItem itemValue="6" itemLabel="6%" />
+                    <f:selectItem itemValue="7" itemLabel="7%" />
+                    <f:selectItem itemValue="8" itemLabel="8%" />
+                    <f:selectItem itemValue="9" itemLabel="9%" />
+                    <f:selectItem itemValue="10" itemLabel="10%" />
+                </h:selectOneMenu>                
+            </s:decorate>
+            <br clear="all"  />
+            <s:decorate id="devicesField" template="/layout/edit.xhtml">
+	            <ui:define name="label">Algoritmos</ui:define>
+	            <rich:pickList id="algorithms" value="#{sampleList.values}" showButtonsLabel="false">
+	               <a:support event="onchange" ajaxSingle="true" reRender="chartPanel" />
+	               <s:selectItems value="#{sampleList.algs}" var="p" label="#{p.name}" itemValue="#{p.id}" />
+	            </rich:pickList>
+	        </s:decorate>
+	        
+        
+        </rich:simpleTogglePanel> 
+
+        <div class="actionButtons">
+            <h:commandButton id="Pesquisar" value="Gerar" action="/pages/SampleList.xhtml" />
+        </div>
+
+    </h:form>
+
+    <rich:panel styleClass="edit">
+        <f:facet name="header">Gráfico</f:facet>
+	    <div class="results" id="sampleList">
+
+		    <h:outputText value="O filtro não gerou um grafico."
+		               rendered="#{empty sampleList.chart}"/>
+            <s:graphicImage value="#{sampleList.chart}" rendered="#{not empty sampleList.chart}" />
+	    </div>
+    </rich:panel>
+</ui:define>
+
+</ui:composition>

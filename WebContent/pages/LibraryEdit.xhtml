@@ -1,0 +1,156 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="library" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{libraryHome.managed ? 'Alterar' : 'Adicionar'} Biblioteca de Segurança</f:facet>
+            
+			<s:decorate id="nameField" template="/layout/edit.xhtml">
+                <ui:define name="label">Nome</ui:define>
+                <h:inputText id="name"
+                       required="true"
+                       disabled="#{not s:hasRole('admin')}"
+                           size="20"
+                      maxlength="20"
+                          value="#{libraryHome.instance.name}">
+                    <a:support event="onblur" reRender="nameField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="languageField" template="/layout/edit.xhtml">
+                <ui:define name="label">Linguagem</ui:define>
+                <h:inputText id="language"
+                       required="true"
+                       disabled="#{not s:hasRole('admin')}"
+                           size="20"
+                      maxlength="20"
+                          value="#{libraryHome.instance.language}">
+                    <a:support event="onblur" reRender="languageField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="versionField" template="/layout/edit.xhtml">
+                <ui:define name="label">Versão</ui:define>
+                <h:inputText id="language"
+                       required="true"
+                       disabled="#{not s:hasRole('admin')}"
+                           size="10"
+                      maxlength="10"
+                          value="#{libraryHome.instance.version}">
+                    <a:support event="onblur" reRender="versionField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="plataformField" template="/layout/edit.xhtml">
+                <ui:define name="label">Plataforma</ui:define>
+                <h:inputText id="plataform"
+                           size="20"
+                       disabled="#{not s:hasRole('admin')}"
+                      maxlength="20"
+                          value="#{libraryHome.instance.plataform}">
+                    <a:support event="onblur" reRender="plataformField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <div style="clear:both">
+                <span class="required">*</span>
+                campos obrigatórios
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Salvar"
+                         action="#{libraryHome.persist}"
+                       disabled="#{!libraryHome.wired}"
+                       rendered="#{!libraryHome.managed and s:hasRole('admin')}"/>
+                       
+            <h:commandButton id="customize"
+                          value="Salvar"
+                         action="#{libraryHome.customize}"
+                       rendered="#{not s:hasRole('admin')}"/>
+
+            <h:commandButton id="update"
+                          value="Salvar"
+                         action="#{libraryHome.update}"
+                       rendered="#{libraryHome.managed and s:hasRole('admin')}"/>
+
+            <h:commandButton id="delete"
+                          value="Remover"
+                         action="#{libraryHome.remove}"
+                      immediate="true"
+                       rendered="#{libraryHome.managed and s:hasRole('admin')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/pages/Library.xhtml"
+                rendered="#{libraryHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/#{empty libraryFrom ? '/pages/LibraryList' : libraryFrom}.xhtml"
+                rendered="#{!libraryHome.managed}"/>
+
+        </div>
+        
+        <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Algoritmos</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="algorithmsChildren">
+
+        <h:outputText value="Não existem associações com essa entidade."
+                   rendered="#{empty libraryHome.algorithms}"/>
+
+        <rich:dataTable value="#{libraryHome.algorithms}"
+                       var="_algorithm"
+                  rendered="#{not empty libraryHome.algorithms}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="algorithmsTable">
+            <rich:column sortBy="#{_algorithm.name}">
+                <f:facet name="header">Algoritmo</f:facet>
+                <h:outputText value="#{_algorithm.name}"/>
+            </rich:column>
+            <rich:column sortBy="#{_algorithm.getAlgorithmConfidentialityDegree(libraryHome.user).p}">
+                <f:facet name="header">P</f:facet>
+                <h:inputText style="padding:0px;margin:0px;" value="#{_algorithm.getAlgorithmConfidentialityDegree(libraryHome.user).p}" >
+                    <a:support event="onblur" reRender="algorithmsTable" ajaxSingle="true"/>
+                </h:inputText>
+            </rich:column>
+            <rich:column sortBy="#{_algorithm.confidentialityDegree}">
+                <f:facet name="header">lk</f:facet>
+                <h:outputText value="#{_algorithm.getConfidentialityDegree(libraryHome.user)}" />
+            </rich:column>
+            <rich:column sortBy="#{_algorithm.confidentialityDegree}">
+                <f:facet name="header">Grau de Confid.</f:facet>
+                <h:outputText value="#{libraryHome.getLevel(_algorithm.getConfidentialityDegree(libraryHome.user))}" />
+            </rich:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    </rich:tab>
+    </rich:tabPanel>
+        
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

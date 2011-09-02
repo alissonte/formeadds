@@ -1,0 +1,77 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Tipo de algoritmo</f:facet>
+
+
+        <s:decorate id="name" template="/layout/display.xhtml">
+            <ui:define name="label">Nome</ui:define>
+            <h:outputText value="#{algorithmTypeHome.instance.name}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/pages/AlgorithmTypeEdit.xhtml"
+                    id="edit"
+                 value="Alterar"/>
+
+        <s:button view="/#{empty algorithmTypeFrom ? '/pages/AlgorithmTypeList' : algorithmTypeFrom}.xhtml"
+                    id="done"
+                 value="Concluído"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Algoritmos</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="algorithmsChildren">
+
+        <h:outputText value="Não existem associações com essa entidade."
+                   rendered="#{empty algorithmTypeHome.algorithms}"/>
+
+        <rich:dataTable value="#{algorithmTypeHome.algorithms}"
+                       var="_algorithm"
+                  rendered="#{not empty algorithmTypeHome.algorithms}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="algorithmsTable">
+            <rich:column sortBy="#{_algorithm.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_algorithm.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_algorithm.name}">
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_algorithm.name}"/>
+            </rich:column>
+            <rich:column sortBy="#{_algorithm.confidentialityDegree}">
+                <f:facet name="header">Grau de Conf.</f:facet>
+                <h:outputText value="#{_algorithm.confidentialityDegree}"/>
+            </rich:column>
+            <rich:column sortBy="#{_algorithm.keyLenghtDefault}">
+                <f:facet name="header">Tamanho padrão da chave</f:facet>
+                <h:outputText value="#{_algorithm.keyLenghtDefault}"/>
+            </rich:column>
+        </rich:dataTable>
+
+    </h:form>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

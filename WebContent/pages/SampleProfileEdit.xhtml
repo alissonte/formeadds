@@ -1,0 +1,97 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="sampleProfile" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{sampleProfileHome.managed ? 'Alterar' : 'Adicionar'} Sample profile</f:facet>
+
+            <s:decorate id="nameField" template="/layout/edit.xhtml">
+                <ui:define name="label">Nome</ui:define>
+                <h:inputText id="name"
+                       required="true"
+                           size="25"
+                      maxlength="25"
+                          value="#{sampleProfileHome.instance.name}">
+                    <a:support event="onblur" reRender="nameField" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="libraryField" template="/layout/edit.xhtml">
+                <ui:define name="label">Biblioteca</ui:define>
+                <h:selectOneMenu value="#{sampleProfileHome.instance.library}" required="true">
+                    <a:support event="onchange" reRender="sizeField,devicesField" ajaxSingle="true"/>
+                    <s:selectItems value="#{sampleProfileHome.libraries}" var="o" label="#{o.name}" noSelectionLabel="Selecione..." />
+                    <s:convertEntity />
+                </h:selectOneMenu>
+            </s:decorate>
+            
+            <s:decorate id="sizeField" template="/layout/edit.xhtml">
+                <ui:define name="label">Tam. do texto (KB)</ui:define>
+                <h:selectOneMenu value="#{sampleProfileHome.textSize}" required="true">
+                    <a:support event="onchange" reRender="devicesField" ajaxSingle="true"/>
+                    <s:selectItems value="#{sampleProfileHome.textSizes}" var="o" label="#{o/1024}" noSelectionLabel="Selecione..." />
+                </h:selectOneMenu>
+            </s:decorate>
+            <br clear="all" />
+             <s:decorate id="devicesField" template="/layout/edit.xhtml">
+                <ui:define name="label">Dispositivos</ui:define>
+                <rich:pickList value="#{sampleProfileHome.selectedDevices}" showButtonsLabel="false">
+                    <s:selectItems value="#{sampleProfileHome.devices}" var="o" label="#{o.name}" />
+                    <s:convertEntity />
+                </rich:pickList>
+            </s:decorate>
+            
+            <div style="clear:both">
+                <span class="required">*</span>
+                campos obrigatórios
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Salvar"
+                         action="#{sampleProfileHome.persist}"
+                       rendered="#{!sampleProfileHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Salvar"
+                         action="#{sampleProfileHome.update}"
+                       rendered="#{sampleProfileHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Remover"
+                         action="#{sampleProfileHome.remove}"
+                      immediate="true"
+                       rendered="#{sampleProfileHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/pages/SampleProfile.xhtml"
+                rendered="#{sampleProfileHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/#{empty sampleProfileFrom ? '/pages/SampleProfileList' : sampleProfileFrom}.xhtml"
+                rendered="#{!sampleProfileHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

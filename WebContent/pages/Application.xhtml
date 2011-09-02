@@ -1,0 +1,82 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Detalhes da aplicação</f:facet>
+
+
+        <s:decorate id="name" template="/layout/display.xhtml">
+            <ui:define name="label">Nome</ui:define>
+            <h:outputText value="#{applicationHome.instance.name}"/>
+        </s:decorate>
+        
+        <s:decorate id="versionField" template="/layout/display.xhtml">
+            <ui:define name="label">Versão</ui:define>
+            <h:outputText id="version"
+                      value="#{applicationHome.instance.version}"/>
+        </s:decorate>
+
+        <s:decorate id="confDegreeField" template="/layout/edit.xhtml">
+            <ui:define name="label">Grau de Confid.</ui:define>
+            <h:outputText value="#{applicationHome.instance.confidentialityDegree.name}" />
+        </s:decorate>
+
+        <s:decorate id="libraryField" template="/layout/edit.xhtml">
+            <ui:define name="label">Biblioteca</ui:define>
+            <h:outputText value="#{applicationHome.instance.library.name}" />
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+        
+                        
+
+        <s:button view="/pages/ApplicationEdit.xhtml"
+                    id="edit"
+                 value="Alterar"/>
+
+        <s:button view="/#{empty applicationFrom ? '/pages/ApplicationList' : applicationFrom}.xhtml"
+                    id="done"
+                 value="Concluído"/>
+
+    </div>
+    <h:form>
+	    <rich:simpleTogglePanel label="Gerar MeSAD" switchType="ajax" opened="false" >
+	        <s:decorate id="generationField" template="/layout/edit.xhtml">
+	                <ui:define name="label">Classificação</ui:define>
+	                <h:selectOneMenu value="#{applicationHome.definedUser}" required="true" >
+	                     <s:selectItems value="#{applicationHome.classification}" var="o" label="#{o.login eq 'admin' ? 'Default' : 'Personalização'}" noSelectionLabel="Selecione..." />
+	                    <a:support event="onchange" reRender="generationField" ajaxSingle="true"/>
+	                    <s:convertEntity />
+	                </h:selectOneMenu>
+	       </s:decorate>
+	       <s:decorate id="profileField" template="/layout/edit.xhtml">
+                    <ui:define name="label">Perfil</ui:define>
+                    <h:selectOneMenu value="#{applicationHome.profile}" required="true" >
+                         <s:selectItems value="#{applicationHome.profiles}" var="o" label="#{o.name}" noSelectionLabel="Selecione..." />
+                        <a:support event="onchange" reRender="profileField" ajaxSingle="true"/>
+                        <s:convertEntity />
+                    </h:selectOneMenu>
+           </s:decorate>
+	       <br clear="all" />
+	        <h:commandButton id="generate"
+                          value="Gerar"
+                         action="#{applicationHome.downloadXML}" />
+	    </rich:simpleTogglePanel>
+    </h:form>
+</ui:define>
+
+</ui:composition>

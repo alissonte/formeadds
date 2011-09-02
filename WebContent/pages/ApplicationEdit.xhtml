@@ -1,0 +1,98 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="application" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{applicationHome.managed ? 'Alterar' : 'Adicionar'} Aplicação</f:facet>
+
+            <s:decorate id="nameField" template="/layout/edit.xhtml">
+                <ui:define name="label">Nome</ui:define>
+                <h:inputText id="name"
+                       required="true"
+                           size="45"
+                      maxlength="45"
+                          value="#{applicationHome.instance.name}">
+                    <a:support event="onblur" reRender="nameField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="versionField" template="/layout/edit.xhtml">
+                <ui:define name="label">Versão</ui:define>
+                <h:inputText id="version"
+                       required="true"
+                      maxlength="45"
+                          value="#{applicationHome.instance.version}">
+                    <a:support event="onblur" reRender="versionField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="confDegreeField" template="/layout/edit.xhtml">
+                <ui:define name="label">Grau de Confid.</ui:define>
+                <h:selectOneMenu required="true" value="#{applicationHome.instance.confidentialityDegree}">
+                    <s:selectItems value="#{confidentialityDegreeList.resultList}" var="o" label="#{o.name}" noSelectionLabel="Selecione..." />
+                    <s:convertEntity />
+                </h:selectOneMenu>
+            </s:decorate>
+
+            <s:decorate id="libraryField" template="/layout/edit.xhtml">
+                <ui:define name="label">Biblioteca</ui:define>
+                <h:selectOneMenu required="true" value="#{applicationHome.instance.library}">
+                    <s:selectItems value="#{libraryList.resultList}" var="o" label="#{o.name}" noSelectionLabel="Selecione..." />
+                    <s:convertEntity />
+                </h:selectOneMenu>
+            </s:decorate>            
+            
+            <div style="clear:both">
+                <span class="required">*</span>
+                campos obrigatórios
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Salvar"
+                         action="#{applicationHome.persist}"
+                       rendered="#{!applicationHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Salvar"
+                         action="#{applicationHome.update}"
+                       rendered="#{applicationHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Remover"
+                         action="#{applicationHome.remove}"
+                      immediate="true"
+                       rendered="#{applicationHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/pages/Application.xhtml"
+                rendered="#{applicationHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/#{empty applicationFrom ? '/pages/ApplicationList' : applicationFrom}.xhtml"
+                rendered="#{!applicationHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

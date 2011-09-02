@@ -1,0 +1,118 @@
+<rich:toolBar
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:rich="http://richfaces.org/rich">
+    <rich:toolBarGroup>
+        <s:link id="menuHomeId" view="/home.xhtml" value="#{projectName}" propagation="none"/>
+    </rich:toolBarGroup>
+    <rich:dropDownMenu rendered="#{identity.loggedIn and s:hasRole('admin')}" showDelay="250" hideDelay="0" submitMode="none">
+        <f:facet name="label">
+        	<f:facet name="label">Administrador</f:facet>
+        </f:facet>
+	    <rich:menuGroup value="Controle de acesso">	        
+		     <rich:menuItem>
+		        <s:link view="/pages/UserList.xhtml"
+		            value="Usuários"
+		            id="UserId"
+		            includePageParams="false"
+		            propagation="none"/>
+		     </rich:menuItem>
+		    <rich:menuItem>
+		        <s:link view="/pages/RoleList.xhtml"
+		            value="Papéis"
+		            id="RoleId"
+		            includePageParams="false"
+		            propagation="none"/>
+		     </rich:menuItem>
+	    </rich:menuGroup> 
+		<rich:menuItem>
+	    	<s:link view="/pages/LibraryList.xhtml"
+	           	value="Bibliotecas de segurança"
+	           	id="LibraryId"
+				includePageParams="false"
+	     		propagation="none"/>
+	     </rich:menuItem>
+	    <rich:menuItem>
+	    	<s:link view="/pages/AlgorithmList.xhtml"
+	           	value="Algoritmos"
+	           	id="AlgorithmId"
+				includePageParams="false"
+	     		propagation="none"/>
+	     </rich:menuItem>
+	    <rich:menuItem>
+	        <s:link view="/pages/AlgorithmTypeList.xhtml"
+	            value="Tipos de Algoritmos"
+	            id="AlgorithmTypeId"
+	            includePageParams="false"
+	            propagation="none"/>
+	     </rich:menuItem>
+        <rich:menuItem>
+            <s:link view="/pages/ConfidentialityDegreeList.xhtml"
+                value="Grau de confidencialidade de aplicação"
+                id="adminConfidentialityDegreeId"
+                includePageParams="false"
+                propagation="none"/>
+        </rich:menuItem>
+        <rich:menuItem>
+            <s:link view="/pages/DeviceList.xhtml"
+                value="Dispositivos Móveis"
+                id="DeviceId"
+                includePageParams="false"
+                propagation="none"/>
+        </rich:menuItem>
+	    <rich:menuItem>
+	        <s:link view="/pages/OperationModeList.xhtml"
+	            value="Modos de operação"
+	            id="OperationModeId"
+	            includePageParams="false"
+	            propagation="none"/>
+	     </rich:menuItem>
+    </rich:dropDownMenu>
+    <rich:dropDownMenu rendered="#{identity.loggedIn}" showDelay="250" hideDelay="0" submitMode="none">
+        <f:facet name="label">Usuário</f:facet> 
+        <rich:menuItem>
+            <s:link view="/pages/ApplicationList.xhtml"
+                value="Aplicações"
+                id="ApplicationId"
+                includePageParams="false"
+                propagation="none"/>
+        </rich:menuItem>
+        <rich:menuItem>
+            <s:link view="/pages/SampleList.xhtml"
+                value="Graficos"
+                id="charts"
+                includePageParams="false"
+                propagation="none"/>
+        </rich:menuItem>
+        <rich:menuItem>
+            <s:link view="/pages/LibraryList.xhtml"
+                value="Configuração dos Algoritmos"
+                id="AlgorithmUserId"
+                includePageParams="false"
+                propagation="none"/>
+         </rich:menuItem>
+        <rich:menuItem>
+            <s:link view="/pages/DeviceList.xhtml"
+                value="Dispositivos Móveis"
+                id="DeviceUserId"
+                includePageParams="false"
+                propagation="none"/>
+        </rich:menuItem>
+	    <rich:menuItem>
+	        <s:link view="/pages/SampleProfileList.xhtml"
+	            value="Perfis de Consumo"
+	            id="SampleConsumptionId"
+	            includePageParams="false"
+	            propagation="none"/>
+	     </rich:menuItem>
+    </rich:dropDownMenu>
+    <!-- @newMenuItem@ -->
+    <rich:toolBarGroup location="right">
+        <h:outputText id="menuWelcomeId" value="#{credentials.username}" rendered="#{identity.loggedIn}"/>
+        <s:link id="menuLoginId" view="/login.xhtml" value="Login" rendered="#{not identity.loggedIn}" propagation="none"/>
+        <s:link id="menuLogoutId" view="/home.xhtml" action="#{identity.logout}" value="Logout" rendered="#{identity.loggedIn}" propagation="none"/>
+    </rich:toolBarGroup>
+</rich:toolBar>

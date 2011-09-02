@@ -1,0 +1,72 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="operationMode" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{operationModeHome.managed ? 'Alterar' : 'Adicionar'} Modo de operação</f:facet>
+
+            <s:decorate id="nameField" template="/layout/edit.xhtml">
+                <ui:define name="label">Nome</ui:define>
+                <h:inputText id="name"
+                       required="true"
+                           size="45"
+                      maxlength="45"
+                          value="#{operationModeHome.instance.name}">
+                    <a:support event="onblur" reRender="nameField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                campos obrigatórios
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Salvar"
+                         action="#{operationModeHome.persist}"
+                       disabled="#{!operationModeHome.wired}"
+                       rendered="#{!operationModeHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Salvar"
+                         action="#{operationModeHome.update}"
+                       rendered="#{operationModeHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Remover"
+                         action="#{operationModeHome.remove}"
+                      immediate="true"
+                       rendered="#{operationModeHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/pages/OperationMode.xhtml"
+                rendered="#{operationModeHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/#{empty operationModeFrom ? '/pages/OperationModeList' : operationModeFrom}.xhtml"
+                rendered="#{!operationModeHome.managed}"/>
+
+        </div>
+    </h:form>
+</ui:define>
+
+</ui:composition>

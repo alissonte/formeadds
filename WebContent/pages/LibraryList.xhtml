@@ -1,0 +1,162 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="librarySearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Filtro de busca" switchType="ajax">
+
+            <s:decorate template="/layout/display.xhtml">
+                <ui:define name="label">Nome</ui:define>
+                <h:inputText id="name" value="#{libraryList.library.name}"/>
+            </s:decorate>
+            
+            <s:decorate template="/layout/display.xhtml">
+                <ui:define name="label">Linguagem</ui:define>
+                <h:inputText id="language" value="#{libraryList.library.language}"/>
+            </s:decorate>
+
+            <s:decorate template="/layout/display.xhtml">
+                <ui:define name="label">Plataforma</ui:define>
+                <h:inputText id="plataform" value="#{libraryList.library.plataform}"/>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="Pesquisar" value="Pesquisar" action="/pages/LibraryList.xhtml"/>
+            <s:button id="Limpar" value="Limpar" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Resultados da busca (#{empty libraryList.resultList ? 0 : (libraryList.paginated ? libraryList.resultCount : libraryList.resultList.size)})</f:facet>
+    <div class="results" id="libraryList">
+
+    <h:outputText value="A busca não retornou resultados."
+               rendered="#{empty libraryList.resultList}"/>
+
+    <rich:dataTable id="libraryList"
+                var="_library"
+              value="#{libraryList.resultList}"
+           rendered="#{not empty libraryList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{libraryList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="library.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_library.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{libraryList}"/>
+                    <ui:param name="propertyLabel" value="Nome"/>
+                    <ui:param name="propertyPath" value="library.name"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_library.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{libraryList}"/>
+                    <ui:param name="propertyLabel" value="Linguagem"/>
+                    <ui:param name="propertyPath" value="library.language"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_library.language}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{libraryList}"/>
+                    <ui:param name="propertyLabel" value="Plataforma"/>
+                    <ui:param name="propertyPath" value="library.plataform"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_library.plataform}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Ação</f:facet>
+            <s:link view="/#{empty from ? '/pages/Library' : from}.xhtml"
+                   value="#{empty from ? 'Visualizar' : 'Selecionar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="libraryViewId">
+                <f:param name="libraryId"
+                        value="#{_library.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/pages/LibraryEdit.xhtml"
+                   value="Alterar"
+             propagation="none"
+                      id="libraryEdit"
+                rendered="#{empty from and s:hasRole('admin')}">
+                <f:param name="libraryId"
+                        value="#{_library.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/LibraryList.xhtml"
+            rendered="#{libraryList.previousExists}"
+               value="#{messages.left}#{messages.left} Primeira"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/pages/LibraryList.xhtml"
+            rendered="#{libraryList.previousExists}"
+               value="#{messages.left} Anterior"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{libraryList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/pages/LibraryList.xhtml"
+            rendered="#{libraryList.nextExists}"
+               value="Próxima #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{libraryList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/pages/LibraryList.xhtml"
+            rendered="#{libraryList.nextExists}"
+               value="Ultima #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{libraryList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/pages/LibraryEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Inserir">
+            <f:param name="libraryId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+	<Resource name="jdbc/defaultDS" type="javax.sql.DataSource" driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://localhost/4mesad" username="root" password="root" auth="Container" maxActive="20"
+		maxIdle="5" maxWait="10000" />
+</Context>

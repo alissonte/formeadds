@@ -1,0 +1,91 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="confidentialityDegree" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{confidentialityDegreeHome.managed ? 'Alterar' : 'Adicionar'} Grau de Confidencialidade</f:facet>
+            
+			<s:decorate id="nameField" template="/layout/edit.xhtml">
+                <ui:define name="label">Nome</ui:define>
+                <h:inputText id="name"
+                       required="true"
+                           size="45"
+                      maxlength="45"
+                          value="#{confidentialityDegreeHome.instance.name}">
+                    <a:support event="onblur" reRender="nameField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="minimumValueField" template="/layout/edit.xhtml">
+                <ui:define name="label">Valor Mínimo</ui:define>
+                <h:inputText id="minimumValue"
+                       required="true"
+                          value="#{confidentialityDegreeHome.instance.minimumValue}">
+                    <a:support event="onblur" reRender="minimumValueField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="maximumValueField" template="/layout/edit.xhtml">
+                <ui:define name="label">Valor Máximo</ui:define>
+                <h:inputText id="maximumValue"
+                       required="true"
+                          value="#{confidentialityDegreeHome.instance.maximumValue}">
+                    <a:support event="onblur" reRender="maximumValueField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                campos obrigatórios
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Salvar"
+                         action="#{confidentialityDegreeHome.persist}"
+                       disabled="#{!confidentialityDegreeHome.wired}"
+                       rendered="#{!confidentialityDegreeHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Salvar"
+                         action="#{confidentialityDegreeHome.update}"
+                       rendered="#{confidentialityDegreeHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Remover"
+                         action="#{confidentialityDegreeHome.remove}"
+                      immediate="true"
+                       rendered="#{confidentialityDegreeHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/pages/ConfidentialityDegree.xhtml"
+                rendered="#{confidentialityDegreeHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/#{empty confidentialityDegreeFrom ? '/pages/ConfidentialityDegreeList' : confidentialityDegreeFrom}.xhtml"
+                rendered="#{!confidentialityDegreeHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

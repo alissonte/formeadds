@@ -1,0 +1,240 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Sample consumption Details</f:facet>
+
+        <s:decorate id="id" template="/layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{sampleConsumptionHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="averageConsumptionDecrypt" template="/layout/display.xhtml">
+            <ui:define name="label">Average consumption decrypt</ui:define>
+            <h:outputText value="#{sampleConsumptionHome.instance.averageConsumptionDecrypt}"/>
+        </s:decorate>
+
+        <s:decorate id="averageConsumptionEncrypt" template="/layout/display.xhtml">
+            <ui:define name="label">Average consumption encrypt</ui:define>
+            <h:outputText value="#{sampleConsumptionHome.instance.averageConsumptionEncrypt}"/>
+        </s:decorate>
+
+        <s:decorate id="date" template="/layout/display.xhtml">
+            <ui:define name="label">Date</ui:define>
+            <h:outputText value="#{sampleConsumptionHome.instance.date}">
+                <s:convertDateTime type="both" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="decryptionRounds" template="/layout/display.xhtml">
+            <ui:define name="label">Decryption rounds</ui:define>
+            <h:outputText value="#{sampleConsumptionHome.instance.decryptionRounds}"/>
+        </s:decorate>
+
+        <s:decorate id="encryptionRounds" template="/layout/display.xhtml">
+            <ui:define name="label">Encryption rounds</ui:define>
+            <h:outputText value="#{sampleConsumptionHome.instance.encryptionRounds}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/pages/SampleConsumptionEdit.xhtml"
+                    id="edit"
+                 value="Alterar"/>
+
+        <s:button view="/#{empty sampleConsumptionFrom ? '/pages/SampleConsumptionList' : sampleConsumptionFrom}.xhtml"
+                    id="done"
+                 value="Concluído"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Algorithm</h:panelGroup>
+        </f:facet>
+    <div class="association" id="algorithmParent">
+
+        <h:outputText value="There is no algorithm associated with this sampleConsumption."
+                   rendered="#{sampleConsumptionHome.instance.algorithm == null}"/>
+
+        <rich:dataTable var="_algorithm"
+                   value="#{sampleConsumptionHome.instance.algorithm}"
+                rendered="#{sampleConsumptionHome.instance.algorithm != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="algorithmTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_algorithm.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Confidentiality degree</f:facet>
+                <h:outputText value="#{_algorithm.confidentialityDegree}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Key lenght default</f:facet>
+                <h:outputText value="#{_algorithm.keyLenghtDefault}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Library id</f:facet>
+                <h:outputText value="#{_algorithm.library.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_algorithm.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Operation mode id</f:facet>
+                <h:outputText value="#{_algorithm.operationMode.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Type id</f:facet>
+                <h:outputText value="#{_algorithm.type.id}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Ação</f:facet>
+                <s:link id="viewalgorithm"
+                     value="Visualizar"
+                      view="/pages/Algorithm.xhtml">
+                    <f:param name="algorithmId"
+                           value="#{_algorithm.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Device</h:panelGroup>
+        </f:facet>
+    <div class="association" id="deviceParent">
+
+        <h:outputText value="There is no device associated with this sampleConsumption."
+                   rendered="#{sampleConsumptionHome.instance.device == null}"/>
+
+        <rich:dataTable var="_device"
+                   value="#{sampleConsumptionHome.instance.device}"
+                rendered="#{sampleConsumptionHome.instance.device != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="deviceTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_device.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Additional info</f:facet>
+                <h:outputText value="#{_device.additionalInfo}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Battery type</f:facet>
+                <h:outputText value="#{_device.batteryType}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Manufaturer</f:facet>
+                <h:outputText value="#{_device.manufaturer}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Memory size</f:facet>
+                <h:outputText value="#{_device.memorySize}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_device.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Processor frequency</f:facet>
+                <h:outputText value="#{_device.processorFrequency}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">User id</f:facet>
+                <h:outputText value="#{_device.user.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Virtual machine name</f:facet>
+                <h:outputText value="#{_device.virtualMachineName}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Ação</f:facet>
+                <s:link id="viewdevice"
+                     value="Visualizar"
+                      view="/pages/Device.xhtml">
+                    <f:param name="deviceId"
+                           value="#{_device.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>User</h:panelGroup>
+        </f:facet>
+    <div class="association" id="userParent">
+
+        <h:outputText value="There is no user associated with this sampleConsumption."
+                   rendered="#{sampleConsumptionHome.instance.user == null}"/>
+
+        <rich:dataTable var="_user"
+                   value="#{sampleConsumptionHome.instance.user}"
+                rendered="#{sampleConsumptionHome.instance.user != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="userTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_user.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">CPF</f:facet>
+                <h:outputText value="#{_user.cpf}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Email</f:facet>
+                <h:outputText value="#{_user.email}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Login</f:facet>
+                <h:outputText value="#{_user.login}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_user.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Password</f:facet>
+                <h:outputText value="#{_user.password}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Ação</f:facet>
+                <s:link id="viewuser"
+                     value="Visualizar"
+                      view="/pages/User.xhtml">
+                    <f:param name="userId"
+                           value="#{_user.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,171 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Algorithm sample profile Details</f:facet>
+
+        <s:decorate id="id" template="/layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{algorithmSampleProfileHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="averageConsumption" template="/layout/display.xhtml">
+            <ui:define name="label">Average consumption</ui:define>
+            <h:outputText value="#{algorithmSampleProfileHome.instance.averageConsumption}"/>
+        </s:decorate>
+
+        <s:decorate id="averageDecryptTime" template="/layout/display.xhtml">
+            <ui:define name="label">Average decrypt time</ui:define>
+            <h:outputText value="#{algorithmSampleProfileHome.instance.averageDecryptTime}"/>
+        </s:decorate>
+
+        <s:decorate id="averageEncryptTime" template="/layout/display.xhtml">
+            <ui:define name="label">Average encrypt time</ui:define>
+            <h:outputText value="#{algorithmSampleProfileHome.instance.averageEncryptTime}"/>
+        </s:decorate>
+
+        <s:decorate id="averageMemoryRequired" template="/layout/display.xhtml">
+            <ui:define name="label">Average memory required</ui:define>
+            <h:outputText value="#{algorithmSampleProfileHome.instance.averageMemoryRequired}"/>
+        </s:decorate>
+
+        <s:decorate id="averageRuntime" template="/layout/display.xhtml">
+            <ui:define name="label">Average runtime</ui:define>
+            <h:outputText value="#{algorithmSampleProfileHome.instance.averageRuntime}"/>
+        </s:decorate>
+
+        <s:decorate id="samplesTextSize" template="/layout/display.xhtml">
+            <ui:define name="label">Samples text size</ui:define>
+            <h:outputText value="#{algorithmSampleProfileHome.instance.samplesTextSize}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/pages/AlgorithmSampleProfileEdit.xhtml"
+                    id="edit"
+                 value="Alterar"/>
+
+        <s:button view="/#{empty algorithmSampleProfileFrom ? '/pages/AlgorithmSampleProfileList' : algorithmSampleProfileFrom}.xhtml"
+                    id="done"
+                 value="Concluído"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Algorithm</h:panelGroup>
+        </f:facet>
+    <div class="association" id="algorithmParent">
+
+        <h:outputText value="There is no algorithm associated with this algorithmSampleProfile."
+                   rendered="#{algorithmSampleProfileHome.instance.algorithm == null}"/>
+
+        <rich:dataTable var="_algorithm"
+                   value="#{algorithmSampleProfileHome.instance.algorithm}"
+                rendered="#{algorithmSampleProfileHome.instance.algorithm != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="algorithmTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_algorithm.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Confidentiality degree</f:facet>
+                <h:outputText value="#{_algorithm.confidentialityDegree}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Key lenght default</f:facet>
+                <h:outputText value="#{_algorithm.keyLenghtDefault}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Library id</f:facet>
+                <h:outputText value="#{_algorithm.library.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_algorithm.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Operation mode id</f:facet>
+                <h:outputText value="#{_algorithm.operationMode.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Type id</f:facet>
+                <h:outputText value="#{_algorithm.type.id}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Ação</f:facet>
+                <s:link id="viewalgorithm"
+                     value="Visualizar"
+                      view="/pages/Algorithm.xhtml">
+                    <f:param name="algorithmId"
+                           value="#{_algorithm.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Sample profile</h:panelGroup>
+        </f:facet>
+    <div class="association" id="sampleProfileParent">
+
+        <h:outputText value="There is no sampleProfile associated with this algorithmSampleProfile."
+                   rendered="#{algorithmSampleProfileHome.instance.sampleProfile == null}"/>
+
+        <rich:dataTable var="_sampleProfile"
+                   value="#{algorithmSampleProfileHome.instance.sampleProfile}"
+                rendered="#{algorithmSampleProfileHome.instance.sampleProfile != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="sampleProfileTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_sampleProfile.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Library id</f:facet>
+                <h:outputText value="#{_sampleProfile.library.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_sampleProfile.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">User id</f:facet>
+                <h:outputText value="#{_sampleProfile.user.id}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Ação</f:facet>
+                <s:link id="viewsampleProfile"
+                     value="Visualizar"
+                      view="/pages/SampleProfile.xhtml">
+                    <f:param name="sampleProfileId"
+                           value="#{_sampleProfile.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

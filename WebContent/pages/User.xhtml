@@ -1,0 +1,291 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">User Details</f:facet>
+
+        <s:decorate id="name" template="/layout/display.xhtml">
+            <ui:define name="label">Nome</ui:define>
+            <h:outputText value="#{userHome.instance.name}"/>
+        </s:decorate>
+
+        <s:decorate id="login" template="/layout/display.xhtml">
+            <ui:define name="label">Login</ui:define>
+            <h:outputText value="#{userHome.instance.login}"/>
+        </s:decorate>
+        
+        <s:decorate id="cpf" template="/layout/display.xhtml">
+            <ui:define name="label">CPF</ui:define>
+            <h:outputText value="#{userHome.instance.cpf}"/>
+        </s:decorate>
+
+        <s:decorate id="email" template="/layout/display.xhtml">
+            <ui:define name="label">Email</ui:define>
+            <h:outputText value="#{userHome.instance.email}"/>
+        </s:decorate>
+        
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/pages/UserEdit.xhtml"
+                    id="edit"
+                 value="Alterar"/>
+
+        <s:button view="/#{empty userFrom ? '/pages/UserList' : userFrom}.xhtml"
+                    id="done"
+                 value="Concluído"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Graus de confid.</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="algorithmconfidentialitydegreesChildren">
+
+        <h:outputText value="Não existem associações com essa entidade."
+                   rendered="#{empty userHome.algorithmconfidentialitydegrees}"/>
+
+        <rich:dataTable value="#{userHome.algorithmconfidentialitydegrees}"
+                       var="_algorithmConfidentialityDegree"
+                  rendered="#{not empty userHome.algorithmconfidentialitydegrees}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="algorithmconfidentialitydegreesTable">
+            <rich:column sortBy="#{_algorithmConfidentialityDegree.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_algorithmConfidentialityDegree.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_algorithmConfidentialityDegree.kmin}">
+                <f:facet name="header">K mínimo</f:facet>
+                <h:outputText value="#{_algorithmConfidentialityDegree.kmin}"/>
+            </rich:column>
+            <rich:column sortBy="#{_algorithmConfidentialityDegree.ktam}">
+                <f:facet name="header">Tamanho de K</f:facet>
+                <h:outputText value="#{_algorithmConfidentialityDegree.ktam}"/>
+            </rich:column>
+            <rich:column sortBy="#{_algorithmConfidentialityDegree.p}">
+                <f:facet name="header">P</f:facet>
+                <h:outputText value="#{_algorithmConfidentialityDegree.p}"/>
+            </rich:column>
+        </rich:dataTable>
+
+    </h:form>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Aplicações</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="applicationsChildren">
+
+        <h:outputText value="Não existem associações com essa entidade."
+                   rendered="#{empty userHome.applications}"/>
+
+        <rich:dataTable value="#{userHome.applications}"
+                       var="_application"
+                  rendered="#{not empty userHome.applications}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="applicationsTable">
+            <rich:column sortBy="#{_application.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_application.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_application.name}">
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_application.name}"/>
+            </rich:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Dispositivos</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="devicesChildren">
+
+        <h:outputText value="Não existem associações com essa entidade."
+                   rendered="#{empty userHome.devices}"/>
+
+        <rich:dataTable value="#{userHome.devices}"
+                       var="_device"
+                  rendered="#{not empty userHome.devices}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="devicesTable">
+            <rich:column sortBy="#{_device.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_device.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_device.name}">
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_device.name}"/>
+            </rich:column>
+            <rich:column sortBy="#{_device.additionalInfo}">
+                <f:facet name="header">Observações</f:facet>
+                <h:outputText value="#{_device.additionalInfo}"/>
+            </rich:column>
+            <rich:column sortBy="#{_device.batteryType}">
+                <f:facet name="header">Bateria</f:facet>
+                <h:outputText value="#{_device.batteryType}"/>
+            </rich:column>
+            <rich:column sortBy="#{_device.manufaturer}">
+                <f:facet name="header">Fabricante</f:facet>
+                <h:outputText value="#{_device.manufaturer}"/>
+            </rich:column>
+            <rich:column sortBy="#{_device.memorySize}">
+                <f:facet name="header">Memória</f:facet>
+                <h:outputText value="#{_device.memorySize}"/>
+            </rich:column>
+            <rich:column sortBy="#{_device.processorFrequency}">
+                <f:facet name="header">Freq. do Processador</f:facet>
+                <h:outputText value="#{_device.processorFrequency}"/>
+            </rich:column>
+            <rich:column sortBy="#{_device.virtualMachineName}">
+                <f:facet name="header">Máquina Virtual</f:facet>
+                <h:outputText value="#{_device.virtualMachineName}"/>
+            </rich:column>
+        </rich:dataTable>
+
+    </h:form>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Consumos de amostras</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="sampleconsumptionsChildren">
+
+        <h:outputText value="Não existem associações com essa entidade."
+                   rendered="#{empty userHome.sampleconsumptions}"/>
+
+        <rich:dataTable value="#{userHome.sampleconsumptions}"
+                       var="_sampleConsumption"
+                  rendered="#{not empty userHome.sampleconsumptions}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="sampleconsumptionsTable">
+            <rich:column sortBy="#{_sampleConsumption.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_sampleConsumption.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sampleConsumption.averageConsumptionDecrypt}">
+                <f:facet name="header">Consumo médio de decod.</f:facet>
+                <h:outputText value="#{_sampleConsumption.averageConsumptionDecrypt}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sampleConsumption.averageConsumptionEncrypt}">
+                <f:facet name="header">Consumo médio de cod.</f:facet>
+                <h:outputText value="#{_sampleConsumption.averageConsumptionEncrypt}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sampleConsumption.date}">
+                <f:facet name="header">Date</f:facet>
+                <h:outputText value="#{_sampleConsumption.date}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_sampleConsumption.decryptionRounds}">
+                <f:facet name="header">Turnos de decod.</f:facet>
+                <h:outputText value="#{_sampleConsumption.decryptionRounds}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sampleConsumption.encryptionRounds}">
+                <f:facet name="header">Turnos de cod.</f:facet>
+                <h:outputText value="#{_sampleConsumption.encryptionRounds}"/>
+            </rich:column>
+        </rich:dataTable>
+
+    </h:form>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Perfis de amostra</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="sampleprofilesChildren">
+
+        <h:outputText value="Não existem associações com essa entidade."
+                   rendered="#{empty userHome.sampleprofiles}"/>
+
+        <rich:dataTable value="#{userHome.sampleprofiles}"
+                       var="_sampleProfile"
+                  rendered="#{not empty userHome.sampleprofiles}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="sampleprofilesTable">
+            <rich:column sortBy="#{_sampleProfile.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_sampleProfile.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sampleProfile.name}">
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_sampleProfile.name}"/>
+            </rich:column>
+        </rich:dataTable>
+
+    </h:form>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Amostras</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="samplesChildren">
+
+        <h:outputText value="Não existem associações com essa entidade."
+                   rendered="#{empty userHome.samples}"/>
+
+        <rich:dataTable value="#{userHome.samples}"
+                       var="_sample"
+                  rendered="#{not empty userHome.samples}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="samplesTable">
+            <rich:column sortBy="#{_sample.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_sample.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sample.decryptTime}">
+                <f:facet name="header">Tempo de decod.</f:facet>
+                <h:outputText value="#{_sample.decryptTime}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sample.decryptionMemory}">
+                <f:facet name="header">Memória de decod.</f:facet>
+                <h:outputText value="#{_sample.decryptionMemory}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sample.encryptTime}">
+                <f:facet name="header">Tempo de cod.</f:facet>
+                <h:outputText value="#{_sample.encryptTime}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sample.encryptionMemory}">
+                <f:facet name="header">Memória de cod.</f:facet>
+                <h:outputText value="#{_sample.encryptionMemory}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sample.sampleDate}">
+                <f:facet name="header">Data</f:facet>
+                <h:outputText value="#{_sample.sampleDate}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_sample.textSize}">
+                <f:facet name="header">Tamanho do texto</f:facet>
+                <h:outputText value="#{_sample.textSize}"/>
+            </rich:column>
+        </rich:dataTable>
+
+    </h:form>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,152 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="algorithm" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{algorithmHome.managed ? 'Alterar' : 'Adicionar'} Algoritmo</f:facet>
+            
+            <s:decorate id="nameField" template="/layout/edit.xhtml">
+                <ui:define name="label">Nome</ui:define>
+                <h:inputText id="name"
+                       required="true"
+                           size="45"
+                      maxlength="45"
+                          value="#{algorithmHome.instance.name}">
+                    <a:support event="onblur" reRender="nameField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="keyLenghtDefaultField" template="/layout/edit.xhtml">
+                <ui:define name="label">Tamanho da chave</ui:define>
+                <h:inputText id="keyLenghtDefault"
+                       required="true"
+                          value="#{algorithmHome.instance.keyLenghtDefault}">
+                    <a:support event="onblur" reRender="keyLenghtDefaultField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+			<br clear="all" />
+			
+			<fieldset>
+				<legend>Grau de confidencialidade</legend>
+				
+	            <s:decorate id="kminField" template="/layout/edit.xhtml">
+	                <ui:define name="label">K Mínimo</ui:define>
+	                <h:inputText id="kmin"
+	                       required="true"
+	                          value="#{algorithmHome.algorithmConfidentialityDegreeHome.instance.kmin}">
+	                    <a:support event="onblur" eventsQueue="formula" reRender="kminField,confidentialityDegreeField" ajaxSingle="true"/>
+	                </h:inputText>
+	            </s:decorate>
+	
+	            <s:decorate id="ktamField" template="/layout/edit.xhtml">
+	                <ui:define name="label">Tamanho de K</ui:define>
+	                <h:inputText id="ktam"
+	                       required="true"
+	                          value="#{algorithmHome.algorithmConfidentialityDegreeHome.instance.ktam}">
+	                    <a:support event="onblur" eventsQueue="formula" reRender="ktamField,confidentialityDegreeField" ajaxSingle="true"/>
+	                </h:inputText>
+	            </s:decorate>
+	
+	            <s:decorate id="pField" template="/layout/edit.xhtml">
+	                <ui:define name="label">P</ui:define>
+	                <h:inputText id="p"
+	                       required="true"
+	                          value="#{algorithmHome.algorithmConfidentialityDegreeHome.instance.p}">
+	                    <a:support event="onblur" eventsQueue="formula" reRender="pField,confidentialityDegreeField" ajaxSingle="true"/>
+	                </h:inputText>
+	            </s:decorate>		
+			
+	            <s:decorate id="confidentialityDegreeField" template="/layout/edit.xhtml">
+	                <ui:define name="label">lk</ui:define>
+	                <h:inputText id="confidentialityDegree"
+	                       required="true"
+	                       disabled="true"
+	                          value="#{algorithmHome.instance.getConfidentialityDegree(algorithmHome.user)}">
+	                </h:inputText>
+	            </s:decorate>
+			</fieldset>
+			
+			<br clear="all" />
+
+			<s:decorate id="libraryField" template="/layout/edit.xhtml">
+                <ui:define name="label">Biblioteca</ui:define>
+                <h:selectOneMenu value="#{algorithmHome.instance.library}" required="true">
+                	<s:selectItems value="#{libraryList.resultList}" var="o" label="#{o.name}" noSelectionLabel="Selecione..." />
+                	<s:convertEntity />
+                </h:selectOneMenu>
+            </s:decorate>
+            
+            <s:decorate id="operationModeField" template="/layout/edit.xhtml">
+                <ui:define name="label">Modo de operação</ui:define>
+                <h:selectOneMenu value="#{algorithmHome.instance.operationMode}" required="true">
+                	<a:support event="onchange" reRender="operationModeField" bypassUpdates="true" ajaxSingle="true"/>
+                	<s:selectItems value="#{operationModeList.resultList}" var="o" label="#{o.name}" noSelectionLabel="Selecione..." />
+                	<s:convertEntity />
+                </h:selectOneMenu>
+            </s:decorate>
+            
+            <s:decorate id="typeField" template="/layout/edit.xhtml">
+                <ui:define name="label">Tipo</ui:define>
+                <h:selectOneMenu value="#{algorithmHome.instance.type}" required="true">
+                	<a:support event="onchange" reRender="typeField" bypassUpdates="true" ajaxSingle="true"/>
+                	<s:selectItems value="#{algorithmTypeList.resultList}" var="o" label="#{o.name}" noSelectionLabel="Selecione..." />
+                	<s:convertEntity />
+                </h:selectOneMenu>
+            </s:decorate>
+            <br clear="all" />
+            
+            <div style="clear:both">
+                <span class="required">*</span>
+                campos obrigatórios
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Salvar"
+                         action="#{algorithmHome.persist}"
+                       rendered="#{!algorithmHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Salvar"
+                         action="#{algorithmHome.update}"
+                       rendered="#{algorithmHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Remover"
+                         action="#{algorithmHome.remove}"
+                      immediate="true"
+                       rendered="#{algorithmHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/pages/Algorithm.xhtml"
+                rendered="#{algorithmHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/#{empty algorithmFrom ? '/pages/AlgorithmList' : algorithmFrom}.xhtml"
+                rendered="#{!algorithmHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

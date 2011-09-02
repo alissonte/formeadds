@@ -1,0 +1,212 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="deviceSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Filtro de busca" switchType="ajax">
+
+            <s:decorate template="/layout/display.xhtml">
+                <ui:define name="label">Nome</ui:define>
+                <h:inputText id="name" value="#{deviceList.device.name}"/>
+            </s:decorate>
+            
+            <s:decorate template="/layout/display.xhtml">
+                <ui:define name="label">Fabricante</ui:define>
+                <h:inputText id="manufaturer" value="#{deviceList.device.manufaturer}"/>
+            </s:decorate>
+
+            <s:decorate template="/layout/display.xhtml">
+                <ui:define name="label">Bateria</ui:define>
+                <h:inputText id="batteryType" value="#{deviceList.device.batteryType}"/>
+            </s:decorate>
+            
+            <s:decorate template="/layout/display.xhtml">
+                <ui:define name="label">Memória</ui:define>
+                <h:inputText id="memorySize" value="#{deviceList.device.memorySize}"/>
+            </s:decorate>
+            
+            <s:decorate template="/layout/display.xhtml">
+                <ui:define name="label">Observações</ui:define>
+                <h:inputText id="additionalInfo" value="#{deviceList.device.additionalInfo}"/>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="Pesquisar" value="Pesquisar" action="/pages/DeviceList.xhtml"/>
+            <s:button id="Limpar" value="Limpar" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Resultados da busca (#{empty deviceList.resultList ? 0 : (deviceList.paginated ? deviceList.resultCount : deviceList.resultList.size)})</f:facet>
+    <div class="results" id="deviceList">
+
+    <h:outputText value="A busca não retornou resultados."
+               rendered="#{empty deviceList.resultList}"/>
+
+    <rich:dataTable id="deviceList"
+                var="_device"
+              value="#{deviceList.resultList}"
+           rendered="#{not empty deviceList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{deviceList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="device.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_device.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{deviceList}"/>
+                    <ui:param name="propertyLabel" value="Nome"/>
+                    <ui:param name="propertyPath" value="device.name"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_device.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{deviceList}"/>
+                    <ui:param name="propertyLabel" value="Bateria"/>
+                    <ui:param name="propertyPath" value="device.batteryType"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_device.batteryType}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{deviceList}"/>
+                    <ui:param name="propertyLabel" value="Fabricante"/>
+                    <ui:param name="propertyPath" value="device.manufaturer"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_device.manufaturer}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{deviceList}"/>
+                    <ui:param name="propertyLabel" value="Memória"/>
+                    <ui:param name="propertyPath" value="device.memorySize"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_device.memorySize}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{deviceList}"/>
+                    <ui:param name="propertyLabel" value="Freq. do Processador"/>
+                    <ui:param name="propertyPath" value="device.processorFrequency"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_device.processorFrequency}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{deviceList}"/>
+                    <ui:param name="propertyLabel" value="User id"/>
+                    <ui:param name="propertyPath" value="device.user.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_device.user.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{deviceList}"/>
+                    <ui:param name="propertyLabel" value="Máquina virtual"/>
+                    <ui:param name="propertyPath" value="device.virtualMachineName"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_device.virtualMachineName}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Ação</f:facet>
+            <s:link view="/#{empty from ? '/pages/Device' : from}.xhtml"
+                   value="#{empty from ? 'Visualizar' : 'Selecionar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="deviceViewId">
+                <f:param name="deviceId"
+                        value="#{_device.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/pages/DeviceEdit.xhtml"
+                   value="Alterar"
+             propagation="none"
+                      id="deviceEdit"
+                rendered="#{empty from and (s:hasRole('admin') or _device.user.id eq deviceHome.user.id)}">
+                <f:param name="deviceId"
+                        value="#{_device.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/pages/DeviceList.xhtml"
+            rendered="#{deviceList.previousExists}"
+               value="#{messages.left}#{messages.left} Primeira"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/pages/DeviceList.xhtml"
+            rendered="#{deviceList.previousExists}"
+               value="#{messages.left} Anterior"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{deviceList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/pages/DeviceList.xhtml"
+            rendered="#{deviceList.nextExists}"
+               value="Próxima #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{deviceList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DeviceList.xhtml"
+            rendered="#{deviceList.nextExists}"
+               value="Ultima #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{deviceList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/pages/DeviceEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Inserir">
+            <f:param name="deviceId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

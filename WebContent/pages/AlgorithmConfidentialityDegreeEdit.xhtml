@@ -1,0 +1,193 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="algorithmConfidentialityDegree" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{algorithmConfidentialityDegreeHome.managed ? 'Alterar' : 'Adicionar'} Algorithm confidentiality degree</f:facet>
+
+            <fieldset>
+            <legend>K</legend>
+            <s:decorate id="kminField" template="/layout/edit.xhtml">
+                <ui:define name="label">Mínimo</ui:define>
+                <h:inputText id="kmin"
+                       required="true"
+                          value="#{algorithmConfidentialityDegreeHome.instance.kmin}">
+                    <a:support event="onblur" reRender="kminField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="ktamField" template="/layout/edit.xhtml">
+                <ui:define name="label">Tamanho</ui:define>
+                <h:inputText id="ktam"
+                       required="true"
+                          value="#{algorithmConfidentialityDegreeHome.instance.ktam}">
+                    <a:support event="onblur" reRender="ktamField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            </fieldset> 
+
+            <s:decorate id="pField" template="/layout/edit.xhtml">
+                <ui:define name="label">P</ui:define>
+                <h:inputText id="p"
+                       required="true"
+                          value="#{algorithmConfidentialityDegreeHome.instance.p}">
+                    <a:support event="onblur" reRender="pField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                campos obrigatórios
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Salvar"
+                         action="#{algorithmConfidentialityDegreeHome.persist}"
+                       disabled="#{!algorithmConfidentialityDegreeHome.wired}"
+                       rendered="#{!algorithmConfidentialityDegreeHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Salvar"
+                         action="#{algorithmConfidentialityDegreeHome.update}"
+                       rendered="#{algorithmConfidentialityDegreeHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Remover"
+                         action="#{algorithmConfidentialityDegreeHome.remove}"
+                      immediate="true"
+                       rendered="#{algorithmConfidentialityDegreeHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/pages/AlgorithmConfidentialityDegree.xhtml"
+                rendered="#{algorithmConfidentialityDegreeHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/#{empty algorithmConfidentialityDegreeFrom ? '/pages/AlgorithmConfidentialityDegreeList' : algorithmConfidentialityDegreeFrom}.xhtml"
+                rendered="#{!algorithmConfidentialityDegreeHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Algorithm *" labelClass="required">
+    <div class="association" id="algorithmParent">
+
+        <h:outputText value="There is no algorithm associated with this algorithmConfidentialityDegree."
+                   rendered="#{algorithmConfidentialityDegreeHome.instance.algorithm == null}"/>
+
+        <rich:dataTable var="_algorithm"
+                   value="#{algorithmConfidentialityDegreeHome.instance.algorithm}"
+                rendered="#{algorithmConfidentialityDegreeHome.instance.algorithm != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="algorithmTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_algorithm.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Confidentiality degree</f:facet>
+                <h:outputText value="#{_algorithm.confidentialityDegree}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Key lenght default</f:facet>
+                <h:outputText value="#{_algorithm.keyLenghtDefault}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Library id</f:facet>
+                <h:outputText value="#{_algorithm.library.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_algorithm.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Operation mode id</f:facet>
+                <h:outputText value="#{_algorithm.operationMode.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Type id</f:facet>
+                <h:outputText value="#{_algorithm.type.id}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{algorithmConfidentialityDegreeHome.instance.algorithm != null ? 'changeParentAlgorithm' : 'selectParentAlgorithm'}" value="#{algorithmConfidentialityDegreeHome.instance.algorithm != null ? 'Alterar' : 'Selecionar'} algorithm"
+                       view="/pages/AlgorithmList.xhtml">
+                <f:param name="from" value="AlgorithmConfidentialityDegreeEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="User *" labelClass="required">
+    <div class="association" id="userParent">
+
+        <h:outputText value="There is no user associated with this algorithmConfidentialityDegree."
+                   rendered="#{algorithmConfidentialityDegreeHome.instance.user == null}"/>
+
+        <rich:dataTable var="_user"
+                   value="#{algorithmConfidentialityDegreeHome.instance.user}"
+                rendered="#{algorithmConfidentialityDegreeHome.instance.user != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="userTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_user.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">CPF</f:facet>
+                <h:outputText value="#{_user.cpf}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Email</f:facet>
+                <h:outputText value="#{_user.email}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Login</f:facet>
+                <h:outputText value="#{_user.login}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_user.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Password</f:facet>
+                <h:outputText value="#{_user.password}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{algorithmConfidentialityDegreeHome.instance.user != null ? 'changeParentAlgorithmCon' : 'selectParentAlgorithmCon'}" value="#{algorithmConfidentialityDegreeHome.instance.user != null ? 'Alterar' : 'Selecionar'} Usuário"
+                       view="/pages/UserList.xhtml">
+                <f:param name="from" value="AlgorithmConfidentialityDegreeEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

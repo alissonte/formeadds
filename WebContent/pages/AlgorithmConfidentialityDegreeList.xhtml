@@ -1,0 +1,175 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="algorithmConfidentialityDegreeSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Filtro de busca" switchType="ajax">
+
+            <s:decorate template="/layout/display.xhtml">
+                <ui:define name="label">Comparar</ui:define>
+                <h:selectOneRadio id="logic" value="#{algorithmConfidentialityDegreeList.restrictionLogicOperator}" styleClass="radio">
+                    <f:selectItem itemLabel="Todos" itemValue="and"/>
+                    <f:selectItem itemLabel="Qualquer um" itemValue="or"/>
+                </h:selectOneRadio>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="Pesquisar" value="Pesquisar" action="/pages/AlgorithmConfidentialityDegreeList.xhtml"/>
+            <s:button id="Limpar" value="Limpar" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Resultados da busca (#{empty algorithmConfidentialityDegreeList.resultList ? 0 : (algorithmConfidentialityDegreeList.paginated ? algorithmConfidentialityDegreeList.resultCount : algorithmConfidentialityDegreeList.resultList.size)})</f:facet>
+    <div class="results" id="algorithmConfidentialityDegreeList">
+
+    <h:outputText value="A busca não retornou resultados."
+               rendered="#{empty algorithmConfidentialityDegreeList.resultList}"/>
+
+    <rich:dataTable id="algorithmConfidentialityDegreeList"
+                var="_algorithmConfidentialityDegree"
+              value="#{algorithmConfidentialityDegreeList.resultList}"
+           rendered="#{not empty algorithmConfidentialityDegreeList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{algorithmConfidentialityDegreeList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="algorithmConfidentialityDegree.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_algorithmConfidentialityDegree.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{algorithmConfidentialityDegreeList}"/>
+                    <ui:param name="propertyLabel" value="Algorithm id"/>
+                    <ui:param name="propertyPath" value="algorithmConfidentialityDegree.algorithm.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_algorithmConfidentialityDegree.algorithm.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{algorithmConfidentialityDegreeList}"/>
+                    <ui:param name="propertyLabel" value="Kmin"/>
+                    <ui:param name="propertyPath" value="algorithmConfidentialityDegree.kmin"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_algorithmConfidentialityDegree.kmin}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{algorithmConfidentialityDegreeList}"/>
+                    <ui:param name="propertyLabel" value="Ktam"/>
+                    <ui:param name="propertyPath" value="algorithmConfidentialityDegree.ktam"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_algorithmConfidentialityDegree.ktam}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{algorithmConfidentialityDegreeList}"/>
+                    <ui:param name="propertyLabel" value="P"/>
+                    <ui:param name="propertyPath" value="algorithmConfidentialityDegree.p"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_algorithmConfidentialityDegree.p}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{algorithmConfidentialityDegreeList}"/>
+                    <ui:param name="propertyLabel" value="User id"/>
+                    <ui:param name="propertyPath" value="algorithmConfidentialityDegree.user.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_algorithmConfidentialityDegree.user.id}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Ação</f:facet>
+            <s:link view="/#{empty from ? '/pages/AlgorithmConfidentialityDegree' : from}.xhtml"
+                   value="#{empty from ? 'Visualizar' : 'Selecionar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="algorithmConfidentialityDegreeViewId">
+                <f:param name="algorithmConfidentialityDegreeId"
+                        value="#{_algorithmConfidentialityDegree.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/pages/AlgorithmConfidentialityDegreeEdit.xhtml"
+                   value="Alterar"
+             propagation="none"
+                      id="algorithmConfidentialityDegreeEdit"
+                rendered="#{empty from}">
+                <f:param name="algorithmConfidentialityDegreeId"
+                        value="#{_algorithmConfidentialityDegree.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/pages/AlgorithmConfidentialityDegreeList.xhtml"
+            rendered="#{algorithmConfidentialityDegreeList.previousExists}"
+               value="#{messages.left}#{messages.left} Primeira"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/pages/AlgorithmConfidentialityDegreeList.xhtml"
+            rendered="#{algorithmConfidentialityDegreeList.previousExists}"
+               value="#{messages.left} Anterior"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{algorithmConfidentialityDegreeList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/pages/AlgorithmConfidentialityDegreeList.xhtml"
+            rendered="#{algorithmConfidentialityDegreeList.nextExists}"
+               value="Próxima #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{algorithmConfidentialityDegreeList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/pages/AlgorithmConfidentialityDegreeList.xhtml"
+            rendered="#{algorithmConfidentialityDegreeList.nextExists}"
+               value="Ultima #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{algorithmConfidentialityDegreeList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/pages/AlgorithmConfidentialityDegreeEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Inserir">
+            <f:param name="algorithmConfidentialityDegreeId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

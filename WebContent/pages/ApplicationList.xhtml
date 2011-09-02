@@ -1,0 +1,162 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="applicationSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Filtro de busca" switchType="ajax">
+
+            <s:decorate template="/layout/display.xhtml">
+                <ui:define name="label">Nome</ui:define>
+                <h:inputText id="name" value="#{applicationList.application.name}"/>
+            </s:decorate>
+            
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="Pesquisar" value="Pesquisar" action="/pages/ApplicationList.xhtml"/>
+            <s:button id="Limpar" value="Limpar" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Resultados da busca (#{empty applicationList.resultList ? 0 : (applicationList.paginated ? applicationList.resultCount : applicationList.resultList.size)})</f:facet>
+    <div class="results" id="applicationList">
+
+    <h:outputText value="A busca não retornou resultados."
+               rendered="#{empty applicationList.resultList}"/>
+
+    <rich:dataTable id="applicationList"
+                var="_application"
+              value="#{applicationList.resultList}"
+           rendered="#{not empty applicationList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{applicationList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="application.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_application.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{applicationList}"/>
+                    <ui:param name="propertyLabel" value="Nome"/>
+                    <ui:param name="propertyPath" value="application.name"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_application.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{applicationList}"/>
+                    <ui:param name="propertyLabel" value="Grau de Confid."/>
+                    <ui:param name="propertyPath" value="application.confidentialityDegree.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_application.confidentialityDegree.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{applicationList}"/>
+                    <ui:param name="propertyLabel" value="Biblioteca"/>
+                    <ui:param name="propertyPath" value="application.library.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_application.library.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{applicationList}"/>
+                    <ui:param name="propertyLabel" value="Usuário"/>
+                    <ui:param name="propertyPath" value="application.user.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_application.user.name}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Ação</f:facet>
+            <s:link view="/#{empty from ? '/pages/Application' : from}.xhtml"
+                   value="#{empty from ? 'Visualizar' : 'Selecionar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="applicationViewId">
+                <f:param name="applicationId"
+                        value="#{_application.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/pages/ApplicationEdit.xhtml"
+                   value="Alterar"
+             propagation="none"
+                      id="applicationEdit"
+                rendered="#{empty from}">
+                <f:param name="applicationId"
+                        value="#{_application.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/pages/ApplicationList.xhtml"
+            rendered="#{applicationList.previousExists}"
+               value="#{messages.left}#{messages.left} Primeira"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/pages/ApplicationList.xhtml"
+            rendered="#{applicationList.previousExists}"
+               value="#{messages.left} Anterior"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{applicationList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/pages/ApplicationList.xhtml"
+            rendered="#{applicationList.nextExists}"
+               value="Próxima #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{applicationList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/pages/ApplicationList.xhtml"
+            rendered="#{applicationList.nextExists}"
+               value="Ultima #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{applicationList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/pages/ApplicationEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Inserir">
+            <f:param name="applicationId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

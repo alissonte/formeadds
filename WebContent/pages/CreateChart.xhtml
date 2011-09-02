@@ -1,0 +1,46 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="algorithmSearch" styleClass="edit">
+        <rich:simpleTogglePanel label="Filtro" switchType="ajax">
+
+	        <s:decorate id="typeField" template="/layout/display.xhtml">
+	            <ui:define name="label">Tipo</ui:define>
+	            <h:selectOneMenu value="#{chartProcessor.processor}" required="true">
+	                <a:support event="onchange" ajaxSingle="true" reRender="datasourceField" />
+	                <s:selectItems value="#{chartProcessor.processors}" var="o" label="#{o}" noSelectionLabel="Selecione..." />
+	            </h:selectOneMenu>
+	        </s:decorate>
+	        
+	        <s:decorate id="datasourceField" template="/layout/display.xhtml">
+	            <ui:define name="label">Fonte de dados</ui:define>
+	            <h:selectOneMenu value="#{chartProcessor.selected.user}" required="true" disabled="#{chartProcessor.selected eq null}" >
+	                <s:selectItems value="#{chartProcessor.dataSource}" var="o" label="#{o.login}" noSelectionLabel="Selecione..." />
+	                <a:support event="onchange" ajaxSingle="true"/>
+	            </h:selectOneMenu>
+	       </s:decorate>
+       </rich:simpleTogglePanel>
+       
+       <div class="actionButtons">
+            <a:commandButton ajaxSingle="true" reRender="chart" immediate="true" id="filter" value="Gerar" />
+        </div>
+        
+       <rich:panel id="chart" >
+	        <f:facet name="header">#{chartProcessor.selected.name}</f:facet>
+	        <s:graphicImage value="#{chartProcessor.getChart()}" />
+	    </rich:panel>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

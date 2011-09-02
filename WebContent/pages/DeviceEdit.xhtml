@@ -1,0 +1,136 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="device" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{deviceHome.managed ? 'Alterar' : 'Adicionar'} Dispositivo</f:facet>
+            <h:outputText value="#{deviceHome.instance.user.name}" />
+            <s:decorate id="nameField" template="/layout/edit.xhtml">
+                <ui:define name="label">Nome</ui:define>
+                <h:inputText id="name"
+                       required="true"
+                           size="45"
+                      maxlength="45"
+                          value="#{deviceHome.instance.name}">
+                    <a:support event="onblur" reRender="nameField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="batteryTypeField" template="/layout/edit.xhtml">
+                <ui:define name="label">Bateria</ui:define>
+                <h:inputText id="batteryType"
+                       required="true"
+                           size="45"
+                      maxlength="45"
+                          value="#{deviceHome.instance.batteryType}">
+                    <a:support event="onblur" reRender="batteryTypeField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="manufaturerField" template="/layout/edit.xhtml">
+                <ui:define name="label">Fabricante</ui:define>
+                <h:inputText id="manufaturer"
+                       required="true"
+                           size="45"
+                      maxlength="45"
+                          value="#{deviceHome.instance.manufaturer}">
+                    <a:support event="onblur" reRender="manufaturerField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            <br clear="all" />
+            
+            <s:decorate id="virtualMachineNameField" template="/layout/edit.xhtml">
+                <ui:define name="label">Máquina Virtual</ui:define>
+                <h:inputText id="virtualMachineName"
+                       required="true"
+                           size="45"
+                      maxlength="45"
+                          value="#{deviceHome.instance.virtualMachineName}">
+                    <a:support event="onblur" reRender="virtualMachineNameField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="memorySizeField" template="/layout/edit.xhtml">
+                <ui:define name="label">Memória</ui:define>
+                <h:inputText id="memorySize"
+                       required="true"
+                          value="#{deviceHome.instance.memorySize}">
+                    <a:support event="onblur" reRender="memorySizeField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="processorFrequencyField" template="/layout/edit.xhtml">
+                <ui:define name="label">Freq. Processador</ui:define>
+                <h:inputText id="processorFrequency"
+                       required="true"
+                          value="#{deviceHome.instance.processorFrequency}">
+                    <a:support event="onblur" reRender="processorFrequencyField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="additionalInfoField" template="/layout/edit.xhtml">
+                <ui:define name="label">Observações</ui:define>
+                <h:inputTextarea id="additionalInfo"
+                           size="45"
+                           cols="100"
+                      maxlength="45"
+                          value="#{deviceHome.instance.additionalInfo}">
+                    <a:support event="onblur" reRender="additionalInfoField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputTextarea>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                campos obrigatórios
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Salvar"
+                         action="#{deviceHome.persist}"
+                       rendered="#{!deviceHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Salvar"
+                         action="#{deviceHome.update}"
+                       rendered="#{deviceHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Remover"
+                         action="#{deviceHome.remove}"
+                      immediate="true"
+                       rendered="#{deviceHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/pages/Device.xhtml"
+                rendered="#{deviceHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/#{empty deviceFrom ? '/pages/DeviceList' : deviceFrom}.xhtml"
+                rendered="#{!deviceHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

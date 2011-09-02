@@ -1,0 +1,213 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="algorithmSampleProfile" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{algorithmSampleProfileHome.managed ? 'Alterar' : 'Adicionar'} Algorithm sample profile</f:facet>
+
+            <fieldset>
+            <legend>Média</legend>
+
+            <s:decorate id="averageConsumptionField" template="/layout/edit.xhtml">
+                <ui:define name="label">Consumo</ui:define>
+                <h:inputText id="averageConsumption"
+                       required="true"
+                          value="#{algorithmSampleProfileHome.instance.averageConsumption}">
+                    <a:support event="onblur" reRender="averageConsumptionField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="averageMemoryRequiredField" template="/layout/edit.xhtml">
+                <ui:define name="label">Memória</ui:define>
+                <h:inputText id="averageMemoryRequired"
+                       required="true"
+                          value="#{algorithmSampleProfileHome.instance.averageMemoryRequired}">
+                    <a:support event="onblur" reRender="averageMemoryRequiredField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="averageRuntimeField" template="/layout/edit.xhtml">
+                <ui:define name="label">Execução</ui:define>
+                <h:inputText id="averageRuntime"
+                       required="true"
+                          value="#{algorithmSampleProfileHome.instance.averageRuntime}">
+                    <a:support event="onblur" reRender="averageRuntimeField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            <br clear="left" />
+            <s:decorate id="averageDecryptTimeField" template="/layout/edit.xhtml">
+                <ui:define name="label">Tempo de desencriptação</ui:define>
+                <h:inputText id="averageDecryptTime"
+                       required="true"
+                          value="#{algorithmSampleProfileHome.instance.averageDecryptTime}">
+                    <a:support event="onblur" reRender="averageDecryptTimeField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="averageEncryptTimeField" template="/layout/edit.xhtml">
+                <ui:define name="label">Tempo de encriptação</ui:define>
+                <h:inputText id="averageEncryptTime"
+                       required="true"
+                          value="#{algorithmSampleProfileHome.instance.averageEncryptTime}">
+                    <a:support event="onblur" reRender="averageEncryptTimeField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            </fieldset>
+            
+            <s:decorate id="samplesTextSizeField" template="/layout/edit.xhtml">
+                <ui:define name="label">Samples text size</ui:define>
+                <h:inputText id="samplesTextSize"
+                       required="true"
+                          value="#{algorithmSampleProfileHome.instance.samplesTextSize}">
+                    <a:support event="onblur" reRender="samplesTextSizeField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <div style="clear:both">
+                <span class="required">*</span>
+                campos obrigatórios
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Salvar"
+                         action="#{algorithmSampleProfileHome.persist}"
+                       disabled="#{!algorithmSampleProfileHome.wired}"
+                       rendered="#{!algorithmSampleProfileHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Salvar"
+                         action="#{algorithmSampleProfileHome.update}"
+                       rendered="#{algorithmSampleProfileHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Remover"
+                         action="#{algorithmSampleProfileHome.remove}"
+                      immediate="true"
+                       rendered="#{algorithmSampleProfileHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/pages/AlgorithmSampleProfile.xhtml"
+                rendered="#{algorithmSampleProfileHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/#{empty algorithmSampleProfileFrom ? '/pages/AlgorithmSampleProfileList' : algorithmSampleProfileFrom}.xhtml"
+                rendered="#{!algorithmSampleProfileHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Algorithm *" labelClass="required">
+    <div class="association" id="algorithmParent">
+
+        <h:outputText value="There is no algorithm associated with this algorithmSampleProfile."
+                   rendered="#{algorithmSampleProfileHome.instance.algorithm == null}"/>
+
+        <rich:dataTable var="_algorithm"
+                   value="#{algorithmSampleProfileHome.instance.algorithm}"
+                rendered="#{algorithmSampleProfileHome.instance.algorithm != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="algorithmTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_algorithm.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Confidentiality degree</f:facet>
+                <h:outputText value="#{_algorithm.confidentialityDegree}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Key lenght default</f:facet>
+                <h:outputText value="#{_algorithm.keyLenghtDefault}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Library id</f:facet>
+                <h:outputText value="#{_algorithm.library.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_algorithm.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Operation mode id</f:facet>
+                <h:outputText value="#{_algorithm.operationMode.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Type id</f:facet>
+                <h:outputText value="#{_algorithm.type.id}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{algorithmSampleProfileHome.instance.algorithm != null ? 'changeParentAlgorithm' : 'selectParentAlgorithm'}" value="#{algorithmSampleProfileHome.instance.algorithm != null ? 'Alterar' : 'Selecionar'} algorithm"
+                       view="/pages/AlgorithmList.xhtml">
+                <f:param name="from" value="AlgorithmSampleProfileEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Sample profile *" labelClass="required">
+    <div class="association" id="sampleProfileParent">
+
+        <h:outputText value="There is no sampleProfile associated with this algorithmSampleProfile."
+                   rendered="#{algorithmSampleProfileHome.instance.sampleProfile == null}"/>
+
+        <rich:dataTable var="_sampleProfile"
+                   value="#{algorithmSampleProfileHome.instance.sampleProfile}"
+                rendered="#{algorithmSampleProfileHome.instance.sampleProfile != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="sampleProfileTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_sampleProfile.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Library id</f:facet>
+                <h:outputText value="#{_sampleProfile.library.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_sampleProfile.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">User id</f:facet>
+                <h:outputText value="#{_sampleProfile.user.id}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{algorithmSampleProfileHome.instance.sampleProfile != null ? 'changeParentSample' : 'selectParentSample'}" value="#{algorithmSampleProfileHome.instance.sampleProfile != null ? 'Alterar' : 'Selecionar'} sampleProfile"
+                       view="/pages/SampleProfileList.xhtml">
+                <f:param name="from" value="AlgorithmSampleProfileEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd"
+      no-conversation-view-id="/AlgorithmSampleProfileList.xhtml"
+      login-required="true">
+
+   <begin-conversation join="true" flush-mode="MANUAL"/>
+
+   <action execute="#{algorithmSampleProfileHome.wire}"/>
+
+   <param name="algorithmSampleProfileFrom"/>
+   <param name="algorithmSampleProfileId" value="#{algorithmSampleProfileHome.algorithmSampleProfileId}"/>
+   <param name="algorithmFrom"/>
+   <param name="algorithmId" value="#{algorithmHome.algorithmId}"/>
+   <param name="libraryFrom"/>
+   <param name="libraryId" value="#{libraryHome.libraryId}"/>
+
+   <param name="operationModeFrom"/>
+   <param name="operationModeId" value="#{operationModeHome.operationModeId}"/>
+
+   <param name="algorithmTypeFrom"/>
+   <param name="algorithmTypeId" value="#{algorithmTypeHome.algorithmTypeId}"/>
+
+
+   <param name="sampleProfileFrom"/>
+   <param name="sampleProfileId" value="#{sampleProfileHome.sampleProfileId}"/>
+   <param name="userFrom"/>
+   <param name="userId" value="#{userHome.userId}"/>
+
+
+
+
+   <navigation from-action="#{algorithmSampleProfileHome.persist}">
+      <rule if-outcome="persisted">
+         <end-conversation/>
+         <redirect view-id="/AlgorithmSampleProfile.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{algorithmSampleProfileHome.update}">
+      <rule if-outcome="updated">
+         <end-conversation/>
+         <redirect view-id="/AlgorithmSampleProfile.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{algorithmSampleProfileHome.remove}">
+      <rule if-outcome="removed">
+         <end-conversation/>
+         <redirect view-id="/AlgorithmSampleProfileList.xhtml"/>
+      </rule>
+   </navigation>
+
+</page>

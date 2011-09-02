@@ -1,0 +1,231 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Algoritmo</f:facet>
+
+        <s:decorate id="name" template="/layout/display.xhtml">
+            <ui:define name="label">Nome</ui:define>
+            <h:outputText value="#{algorithmHome.instance.name}"/>
+        </s:decorate>
+
+        <s:decorate id="confidentialityDegree" template="/layout/display.xhtml">
+            <ui:define name="label">Grau de confidenc.</ui:define>
+            <h:outputText value="#{algorithmHome.instance.getConfidentialityDegree(algorithmHome.user)}"/>
+        </s:decorate>
+
+        <s:decorate id="keyLenghtDefault" template="/layout/display.xhtml">
+            <ui:define name="label">Tamanho da chave</ui:define>
+            <h:outputText value="#{algorithmHome.instance.keyLenghtDefault}"/>
+        </s:decorate>
+        
+        <s:decorate id="library" template="/layout/display.xhtml">
+            <ui:define name="label">Biblioteca</ui:define>
+            <h:outputText value="#{algorithmHome.instance.library.name}"/>
+        </s:decorate>
+        
+        <s:decorate id="operationMode" template="/layout/display.xhtml">
+            <ui:define name="label">Modo de Oper.</ui:define>
+            <h:outputText value="#{algorithmHome.instance.operationMode.name}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/pages/AlgorithmEdit.xhtml"
+                    id="edit"
+                 value="Alterar"/>
+
+        <s:button view="/#{empty algorithmFrom ? '/pages/AlgorithmList' : /pages/algorithmFrom}.xhtml"
+                    id="done"
+                 value="Concluído"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Perfis de Amostra</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="algsampleprofilesChildren">
+
+        <h:outputText value="Não existem associações com essa entidade."
+                   rendered="#{empty algorithmHome.algsampleprofiles}"/>
+
+        <rich:dataTable value="#{algorithmHome.algsampleprofiles}"
+                       var="_algorithmSampleProfile"
+                  rendered="#{not empty algorithmHome.algsampleprofiles}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="algsampleprofilesTable">
+            <rich:column sortBy="#{_algorithmSampleProfile.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_algorithmSampleProfile.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_algorithmSampleProfile.averageConsumption}">
+                <f:facet name="header">Average consumption</f:facet>
+                <h:outputText value="#{_algorithmSampleProfile.averageConsumption}"/>
+            </rich:column>
+            <rich:column sortBy="#{_algorithmSampleProfile.averageDecryptTime}">
+                <f:facet name="header">Average decrypt time</f:facet>
+                <h:outputText value="#{_algorithmSampleProfile.averageDecryptTime}"/>
+            </rich:column>
+            <rich:column sortBy="#{_algorithmSampleProfile.averageEncryptTime}">
+                <f:facet name="header">Average encrypt time</f:facet>
+                <h:outputText value="#{_algorithmSampleProfile.averageEncryptTime}"/>
+            </rich:column>
+            <rich:column sortBy="#{_algorithmSampleProfile.averageMemoryRequired}">
+                <f:facet name="header">Average memory required</f:facet>
+                <h:outputText value="#{_algorithmSampleProfile.averageMemoryRequired}"/>
+            </rich:column>
+            <rich:column sortBy="#{_algorithmSampleProfile.averageRuntime}">
+                <f:facet name="header">Average runtime</f:facet>
+                <h:outputText value="#{_algorithmSampleProfile.averageRuntime}"/>
+            </rich:column>
+            <rich:column sortBy="#{_algorithmSampleProfile.samplesTextSize}">
+                <f:facet name="header">Samples text size</f:facet>
+                <h:outputText value="#{_algorithmSampleProfile.samplesTextSize}"/>
+            </rich:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Consumos de amostras</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="sampleconsumptionsChildren">
+
+        <h:outputText value="Não existem associações com essa entidade."
+                   rendered="#{empty algorithmHome.sampleconsumptions}"/>
+
+        <rich:dataTable value="#{algorithmHome.sampleconsumptions}"
+                       var="_sampleConsumption"
+                  rendered="#{not empty algorithmHome.sampleconsumptions}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="sampleconsumptionsTable">
+            <rich:column sortBy="#{_sampleConsumption.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_sampleConsumption.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sampleConsumption.averageConsumptionDecrypt}">
+                <f:facet name="header">Average consumption decrypt</f:facet>
+                <h:outputText value="#{_sampleConsumption.averageConsumptionDecrypt}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sampleConsumption.averageConsumptionEncrypt}">
+                <f:facet name="header">Average consumption encrypt</f:facet>
+                <h:outputText value="#{_sampleConsumption.averageConsumptionEncrypt}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sampleConsumption.date}">
+                <f:facet name="header">Date</f:facet>
+                <h:outputText value="#{_sampleConsumption.date}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_sampleConsumption.decryptionRounds}">
+                <f:facet name="header">Decryption rounds</f:facet>
+                <h:outputText value="#{_sampleConsumption.decryptionRounds}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sampleConsumption.encryptionRounds}">
+                <f:facet name="header">Encryption rounds</f:facet>
+                <h:outputText value="#{_sampleConsumption.encryptionRounds}"/>
+            </rich:column>
+        </rich:dataTable>
+
+    </h:form>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Amostras</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="samplesChildren">
+
+        <h:outputText value="Não existem associações com essa entidade."
+                   rendered="#{empty algorithmHome.samples}"/>
+
+        <rich:dataTable value="#{algorithmHome.samples}"
+                       var="_sample"
+                  rendered="#{not empty algorithmHome.samples}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="samplesTable">
+            <rich:column sortBy="#{_sample.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_sample.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sample.decryptTime}">
+                <f:facet name="header">Decrypt time</f:facet>
+                <h:outputText value="#{_sample.decryptTime}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sample.decryptionMemory}">
+                <f:facet name="header">Decryption memory</f:facet>
+                <h:outputText value="#{_sample.decryptionMemory}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sample.encryptTime}">
+                <f:facet name="header">Encrypt time</f:facet>
+                <h:outputText value="#{_sample.encryptTime}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sample.encryptionMemory}">
+                <f:facet name="header">Encryption memory</f:facet>
+                <h:outputText value="#{_sample.encryptionMemory}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sample.sampleDate}">
+                <f:facet name="header">Sample date</f:facet>
+                <h:outputText value="#{_sample.sampleDate}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_sample.textSize}">
+                <f:facet name="header">Text size</f:facet>
+                <h:outputText value="#{_sample.textSize}"/>
+            </rich:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Tipo</h:panelGroup>
+        </f:facet>
+    <div class="association" id="typeParent">
+
+        <h:outputText value="There is no type associated with this algorithm."
+                   rendered="#{algorithmHome.instance.type == null}"/>
+
+        <rich:dataTable var="_algorithmType"
+                   value="#{algorithmHome.instance.type}"
+                rendered="#{algorithmHome.instance.type != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="typeTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_algorithmType.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_algorithmType.name}"/>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

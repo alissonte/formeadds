@@ -1,0 +1,164 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Algorithm confidentiality degree Details</f:facet>
+
+        <s:decorate id="id" template="/layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{algorithmConfidentialityDegreeHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="kmin" template="/layout/display.xhtml">
+            <ui:define name="label">K mínimo</ui:define>
+            <h:outputText value="#{algorithmConfidentialityDegreeHome.instance.kmin}"/>
+        </s:decorate>
+
+        <s:decorate id="ktam" template="/layout/display.xhtml">
+            <ui:define name="label">Tamanho K</ui:define>
+            <h:outputText value="#{algorithmConfidentialityDegreeHome.instance.ktam}"/>
+        </s:decorate>
+
+        <s:decorate id="p" template="/layout/display.xhtml">
+            <ui:define name="label">P</ui:define>
+            <h:outputText value="#{algorithmConfidentialityDegreeHome.instance.p}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/pages/AlgorithmConfidentialityDegreeEdit.xhtml"
+                    id="edit"
+                 value="Alterar"/>
+
+        <s:button view="/#{empty algorithmConfidentialityDegreeFrom ? '/pages/AlgorithmConfidentialityDegreeList' : algorithmConfidentialityDegreeFrom}.xhtml"
+                    id="done"
+                 value="Concluído"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Algorithm</h:panelGroup>
+        </f:facet>
+    <div class="association" id="algorithmParent">
+
+        <h:outputText value="There is no algorithm associated with this algorithmConfidentialityDegree."
+                   rendered="#{algorithmConfidentialityDegreeHome.instance.algorithm == null}"/>
+
+        <rich:dataTable var="_algorithm"
+                   value="#{algorithmConfidentialityDegreeHome.instance.algorithm}"
+                rendered="#{algorithmConfidentialityDegreeHome.instance.algorithm != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="algorithmTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_algorithm.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Confidentiality degree</f:facet>
+                <h:outputText value="#{_algorithm.confidentialityDegree}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Key lenght default</f:facet>
+                <h:outputText value="#{_algorithm.keyLenghtDefault}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Library id</f:facet>
+                <h:outputText value="#{_algorithm.library.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_algorithm.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Operation mode id</f:facet>
+                <h:outputText value="#{_algorithm.operationMode.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Type id</f:facet>
+                <h:outputText value="#{_algorithm.type.id}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Ação</f:facet>
+                <s:link id="viewalgorithm"
+                     value="Visualizar"
+                      view="/pages/Algorithm.xhtml">
+                    <f:param name="algorithmId"
+                           value="#{_algorithm.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>User</h:panelGroup>
+        </f:facet>
+    <div class="association" id="userParent">
+
+        <h:outputText value="There is no user associated with this algorithmConfidentialityDegree."
+                   rendered="#{algorithmConfidentialityDegreeHome.instance.user == null}"/>
+
+        <rich:dataTable var="_user"
+                   value="#{algorithmConfidentialityDegreeHome.instance.user}"
+                rendered="#{algorithmConfidentialityDegreeHome.instance.user != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="userTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_user.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">CPF</f:facet>
+                <h:outputText value="#{_user.cpf}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Email</f:facet>
+                <h:outputText value="#{_user.email}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Login</f:facet>
+                <h:outputText value="#{_user.login}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_user.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Password</f:facet>
+                <h:outputText value="#{_user.password}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Ação</f:facet>
+                <s:link id="viewuser"
+                     value="Visualizar"
+                      view="/pages/User.xhtml">
+                    <f:param name="userId"
+                           value="#{_user.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

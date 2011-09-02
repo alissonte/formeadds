@@ -1,0 +1,283 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="sample" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{sampleHome.managed ? 'Alterar' : 'Adicionar'} Sample</f:facet>
+
+
+
+
+            <s:decorate id="decryptTimeField" template="/layout/edit.xhtml">
+                <ui:define name="label">Decrypt time</ui:define>
+                <h:inputText id="decryptTime"
+                       required="true"
+                          value="#{sampleHome.instance.decryptTime}">
+                    <a:support event="onblur" reRender="decryptTimeField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="decryptionMemoryField" template="/layout/edit.xhtml">
+                <ui:define name="label">Decryption memory</ui:define>
+                <h:inputText id="decryptionMemory"
+                       required="true"
+                          value="#{sampleHome.instance.decryptionMemory}">
+                    <a:support event="onblur" reRender="decryptionMemoryField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+
+            <s:decorate id="encryptTimeField" template="/layout/edit.xhtml">
+                <ui:define name="label">Encrypt time</ui:define>
+                <h:inputText id="encryptTime"
+                       required="true"
+                          value="#{sampleHome.instance.encryptTime}">
+                    <a:support event="onblur" reRender="encryptTimeField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="encryptionMemoryField" template="/layout/edit.xhtml">
+                <ui:define name="label">Encryption memory</ui:define>
+                <h:inputText id="encryptionMemory"
+                       required="true"
+                          value="#{sampleHome.instance.encryptionMemory}">
+                    <a:support event="onblur" reRender="encryptionMemoryField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="sampleDateField" template="/layout/edit.xhtml">
+                <ui:define name="label">Sample date</ui:define>
+                <rich:calendar id="sampleDate"
+                       required="true"
+                          value="#{sampleHome.instance.sampleDate}" datePattern="MM/dd/yyyy hh:mm a"/>
+            </s:decorate>
+
+
+            <s:decorate id="textSizeField" template="/layout/edit.xhtml">
+                <ui:define name="label">Text size</ui:define>
+                <h:inputText id="textSize"
+                       required="true"
+                          value="#{sampleHome.instance.textSize}">
+                    <a:support event="onblur" reRender="textSizeField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                campos obrigatórios
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Salvar"
+                         action="#{sampleHome.persist}"
+                       disabled="#{!sampleHome.wired}"
+                       rendered="#{!sampleHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Salvar"
+                         action="#{sampleHome.update}"
+                       rendered="#{sampleHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Remover"
+                         action="#{sampleHome.remove}"
+                      immediate="true"
+                       rendered="#{sampleHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/pages/Sample.xhtml"
+                rendered="#{sampleHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/#{empty sampleFrom ? '/pages/SampleList' : sampleFrom}.xhtml"
+                rendered="#{!sampleHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Algorithm *" labelClass="required">
+    <div class="association" id="algorithmParent">
+
+        <h:outputText value="There is no algorithm associated with this sample."
+                   rendered="#{sampleHome.instance.algorithm == null}"/>
+
+        <rich:dataTable var="_algorithm"
+                   value="#{sampleHome.instance.algorithm}"
+                rendered="#{sampleHome.instance.algorithm != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="algorithmTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_algorithm.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Confidentiality degree</f:facet>
+                <h:outputText value="#{_algorithm.confidentialityDegree}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Key lenght default</f:facet>
+                <h:outputText value="#{_algorithm.keyLenghtDefault}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Library id</f:facet>
+                <h:outputText value="#{_algorithm.library.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_algorithm.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Operation mode id</f:facet>
+                <h:outputText value="#{_algorithm.operationMode.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Type id</f:facet>
+                <h:outputText value="#{_algorithm.type.id}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{sampleHome.instance.algorithm != null ? 'changeParent' : 'selectParent'}" value="#{sampleHome.instance.algorithm != null ? 'Alterar' : 'Selecionar'} algorithm"
+                       view="/pages/AlgorithmList.xhtml">
+                <f:param name="from" value="SampleEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Device *" labelClass="required">
+    <div class="association" id="deviceParent">
+
+        <h:outputText value="There is no device associated with this sample."
+                   rendered="#{sampleHome.instance.device == null}"/>
+
+        <rich:dataTable var="_device"
+                   value="#{sampleHome.instance.device}"
+                rendered="#{sampleHome.instance.device != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="deviceTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_device.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Additional info</f:facet>
+                <h:outputText value="#{_device.additionalInfo}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Battery type</f:facet>
+                <h:outputText value="#{_device.batteryType}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Manufaturer</f:facet>
+                <h:outputText value="#{_device.manufaturer}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Memory size</f:facet>
+                <h:outputText value="#{_device.memorySize}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_device.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Processor frequency</f:facet>
+                <h:outputText value="#{_device.processorFrequency}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">User id</f:facet>
+                <h:outputText value="#{_device.user.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Virtual machine name</f:facet>
+                <h:outputText value="#{_device.virtualMachineName}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{sampleHome.instance.device != null ? 'changeParent' : 'selectParent'}" value="#{sampleHome.instance.device != null ? 'Alterar' : 'Selecionar'} device"
+                       view="/pages/DeviceList.xhtml">
+                <f:param name="from" value="SampleEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="User *" labelClass="required">
+    <div class="association" id="userParent">
+
+        <h:outputText value="There is no user associated with this sample."
+                   rendered="#{sampleHome.instance.user == null}"/>
+
+        <rich:dataTable var="_user"
+                   value="#{sampleHome.instance.user}"
+                rendered="#{sampleHome.instance.user != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="userTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_user.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">CPF</f:facet>
+                <h:outputText value="#{_user.cpf}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Email</f:facet>
+                <h:outputText value="#{_user.email}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Login</f:facet>
+                <h:outputText value="#{_user.login}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_user.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Password</f:facet>
+                <h:outputText value="#{_user.password}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{sampleHome.instance.user != null ? 'changeParent' : 'selectParent'}" value="#{sampleHome.instance.user != null ? 'Alterar' : 'Selecionar'} user"
+                       view="/pages/UserList.xhtml">
+                <f:param name="from" value="SampleEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

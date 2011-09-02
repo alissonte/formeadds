@@ -1,0 +1,181 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="algorithmSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Filtro de busca" switchType="ajax">
+
+            <s:decorate template="/layout/display.xhtml">
+                <ui:define name="label">Nome</ui:define>
+                <h:inputText id="name" value="#{algorithmList.algorithm.name}"/>
+            </s:decorate>
+            
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="Pesquisar" value="Pesquisar" action="/pages/AlgorithmList.xhtml"/>
+            <s:button id="Limpar" value="Limpar" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Resultados da busca (#{empty algorithmList.resultList ? 0 : (algorithmList.paginated ? algorithmList.resultCount : algorithmList.resultList.size)})</f:facet>
+    <div class="results" id="algorithmList">
+
+    <h:outputText value="A busca não retornou resultados."
+               rendered="#{empty algorithmList.resultList}"/>
+
+    <rich:dataTable id="algorithmList"
+                var="_algorithm"
+              value="#{algorithmList.resultList}"
+           rendered="#{not empty algorithmList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{algorithmList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="algorithm.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_algorithm.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{algorithmList}"/>
+                    <ui:param name="propertyLabel" value="Nome"/>
+                    <ui:param name="propertyPath" value="algorithm.name"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_algorithm.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{algorithmList}"/>
+                    <ui:param name="propertyLabel" value="Grau de Confid."/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_algorithm.getConfidentialityDegree(algorithmList.user)}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{algorithmList}"/>
+                    <ui:param name="propertyLabel" value="Tamanho padrão da chave"/>
+                    <ui:param name="propertyPath" value="algorithm.keyLenghtDefault"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_algorithm.keyLenghtDefault}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{algorithmList}"/>
+                    <ui:param name="propertyLabel" value="Biblioteca"/>
+                    <ui:param name="propertyPath" value="algorithm.library.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_algorithm.library.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{algorithmList}"/>
+                    <ui:param name="propertyLabel" value="Modo de operação"/>
+                    <ui:param name="propertyPath" value="algorithm.operationMode.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_algorithm.operationMode.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{algorithmList}"/>
+                    <ui:param name="propertyLabel" value="Tipo"/>
+                    <ui:param name="propertyPath" value="algorithm.type.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_algorithm.type.name}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Ação</f:facet>
+            <s:link view="/#{empty from ? '/pages/Algorithm' : from}.xhtml"
+                   value="#{empty from ? 'Visualizar' : 'Selecionar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="algorithmViewId">
+                <f:param name="algorithmId"
+                        value="#{_algorithm.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/pages/AlgorithmEdit.xhtml"
+                   value="Alterar"
+             propagation="none"
+                      id="algorithmEdit"
+                rendered="#{empty from and s:hasRole('admin')}">
+                <f:param name="algorithmId"
+                        value="#{_algorithm.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/pages/AlgorithmList.xhtml"
+            rendered="#{algorithmList.previousExists}"
+               value="#{messages.left}#{messages.left} Primeira"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/pages/AlgorithmList.xhtml"
+            rendered="#{algorithmList.previousExists}"
+               value="#{messages.left} Anterior"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{algorithmList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/pages/AlgorithmList.xhtml"
+            rendered="#{algorithmList.nextExists}"
+               value="Próxima #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{algorithmList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/pages/AlgorithmList.xhtml"
+            rendered="#{algorithmList.nextExists}"
+               value="Ultima #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{algorithmList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/pages/AlgorithmEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Inserir">
+            <f:param name="algorithmId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

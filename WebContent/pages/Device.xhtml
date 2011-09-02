@@ -1,0 +1,167 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Device Details</f:facet>
+
+        <s:decorate id="name" template="/layout/display.xhtml">
+            <ui:define name="label">Nome</ui:define>
+            <h:outputText value="#{deviceHome.instance.name}"/>
+        </s:decorate>
+        
+        <s:decorate id="batteryType" template="/layout/display.xhtml">
+            <ui:define name="label">Bateria</ui:define>
+            <h:outputText value="#{deviceHome.instance.batteryType}"/>
+        </s:decorate>
+
+        <s:decorate id="manufaturer" template="/layout/display.xhtml">
+            <ui:define name="label">Fabricante</ui:define>
+            <h:outputText value="#{deviceHome.instance.manufaturer}"/>
+        </s:decorate>
+
+        <s:decorate id="memorySize" template="/layout/display.xhtml">
+            <ui:define name="label">Memória</ui:define>
+            <h:outputText value="#{deviceHome.instance.memorySize}"/>
+        </s:decorate>
+
+        <s:decorate id="processorFrequency" template="/layout/display.xhtml">
+            <ui:define name="label">Freq. Processador</ui:define>
+            <h:outputText value="#{deviceHome.instance.processorFrequency}"/>
+        </s:decorate>
+
+        <s:decorate id="virtualMachineName" template="/layout/display.xhtml">
+            <ui:define name="label">Máquina Virtual</ui:define>
+            <h:outputText value="#{deviceHome.instance.virtualMachineName}"/>
+        </s:decorate>
+        
+        <s:decorate id="additionalInfo" template="/layout/display.xhtml">
+            <ui:define name="label">Obeservações</ui:define>
+            <h:outputText value="#{deviceHome.instance.additionalInfo}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/pages/DeviceEdit.xhtml"
+                    id="edit"
+                 value="Alterar"/>
+
+        <s:button view="/#{empty deviceFrom ? '/pages/DeviceList' : deviceFrom}.xhtml"
+                    id="done"
+                 value="Concluído"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Amostras de Consumo</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="sampleconsumptionsChildren">
+
+        <h:outputText value="Não existem associações com essa entidade."
+                   rendered="#{empty deviceHome.sampleconsumptions}"/>
+
+        <rich:dataTable value="#{deviceHome.sampleconsumptions}"
+                       var="_sampleConsumption"
+                  rendered="#{not empty deviceHome.sampleconsumptions}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="sampleconsumptionsTable">
+            <rich:column sortBy="#{_sampleConsumption.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_sampleConsumption.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sampleConsumption.averageConsumptionDecrypt}">
+                <f:facet name="header">Cons. Médio decodificação</f:facet>
+                <h:outputText value="#{_sampleConsumption.averageConsumptionDecrypt}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sampleConsumption.averageConsumptionEncrypt}">
+                <f:facet name="header">Cons. Médio codificação</f:facet>
+                <h:outputText value="#{_sampleConsumption.averageConsumptionEncrypt}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sampleConsumption.date}">
+                <f:facet name="header">Data</f:facet>
+                <h:outputText value="#{_sampleConsumption.date}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_sampleConsumption.decryptionRounds}">
+                <f:facet name="header">Turnos Decod.</f:facet>
+                <h:outputText value="#{_sampleConsumption.decryptionRounds}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sampleConsumption.encryptionRounds}">
+                <f:facet name="header">Turnos Cod.</f:facet>
+                <h:outputText value="#{_sampleConsumption.encryptionRounds}"/>
+            </rich:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Amostras</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="samplesChildren">
+
+        <h:outputText value="Não existem associações com essa entidade."
+                   rendered="#{empty deviceHome.samples}"/>
+
+        <rich:dataTable value="#{deviceHome.samples}"
+                       var="_sample"
+                  rendered="#{not empty deviceHome.samples}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="samplesTable">
+            <rich:column sortBy="#{_sample.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_sample.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sample.decryptTime}">
+                <f:facet name="header">Tempo de Decod.</f:facet>
+                <h:outputText value="#{_sample.decryptTime}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sample.decryptionMemory}">
+                <f:facet name="header">Memória de Cod.</f:facet>
+                <h:outputText value="#{_sample.decryptionMemory}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sample.encryptTime}">
+                <f:facet name="header">Tempo de Cod.</f:facet>
+                <h:outputText value="#{_sample.encryptTime}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sample.encryptionMemory}">
+                <f:facet name="header">Memória de Cod.</f:facet>
+                <h:outputText value="#{_sample.encryptionMemory}"/>
+            </rich:column>
+            <rich:column sortBy="#{_sample.sampleDate}">
+                <f:facet name="header">Data da Mostra</f:facet>
+                <h:outputText value="#{_sample.sampleDate}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_sample.textSize}">
+                <f:facet name="header">Tamanho do texto</f:facet>
+                <h:outputText value="#{_sample.textSize}"/>
+            </rich:column>
+        </rich:dataTable>
+
+    </h:form>
+    </rich:tab>
+
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>
